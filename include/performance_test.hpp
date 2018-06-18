@@ -4,6 +4,7 @@
 //#include<typeinfo>
 #include<iostream>
 
+#include "unit_test.hpp"
 #include "test_failed.hpp"
 #include "timer.hpp"
 
@@ -13,7 +14,7 @@ namespace cutee
 template<size_t repeats, typename test>
 class performance_test
    :  public  virtual unit_test
-   ,  private virtual test /* using inheritance for EBCO (empty base class optimization) */
+   ,  private virtual test       /* using inheritance for EBCO (empty base class optimization) */
 {
    private:
       clock_timer m_timer;
