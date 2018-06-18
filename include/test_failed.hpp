@@ -1,5 +1,5 @@
-#ifndef LIBMDA_TESTING_TEST_FAILED_H_INCLUDED
-#define LIBMDA_TESTING_TEST_FAILED_H_INCLUDED
+#ifndef CUTEE_TEST_FAILED_H_INCLUDED
+#define CUTEE_TEST_FAILED_H_INCLUDED
 
 #include<string>
 #include<iostream>
@@ -7,12 +7,10 @@
 #include<type_traits>
 #include<iomanip>
 
-#include "failed_data.h"
-#include "float_eq.h"
+#include "failed_data.hpp"
+#include "float_eq.hpp"
 
-namespace libmda
-{
-namespace testing
+namespace cutee
 {
 namespace detail
 {
@@ -39,7 +37,7 @@ struct output_float_dist<true>
    template<class T>
    static void apply(std::stringstream& s, const T& got, const T& expected)
    {
-      s << " dist: " << libmda::numeric::float_ulps(expected, got);
+      s << " dist: " << float_ulps(expected, got);
    }
 };
 
@@ -109,7 +107,6 @@ struct test_failed
       failed_data_base*  m_pdata;
 };
 
-} // namespace testing
-} // namespace libmda
+} /* namespace cutee */
 
-#endif // LIBMDA_TESTING_TEST_FAILED_H_INCLUDED
+#endif /* CUTEE_TEST_FAILED_H_INCLUDED */

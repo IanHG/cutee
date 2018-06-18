@@ -3,9 +3,7 @@
 
 #include <ctime>
 
-namespace libmda
-{
-namespace testing
+namespace cutee
 {
 
 class clock_timer
@@ -103,7 +101,6 @@ class clock_timer
       }
 };
 
-} // namespace testing
-} // namespace libmda
+} /* namespace cutee */
 
-#endif /* LIBMDA_TESTING_TIMER_H */
+#endif /* CUTEE_TIMER_H */

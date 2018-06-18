@@ -1,15 +1,13 @@
-#ifndef LIMBDA_TESTING_UNIT_TEST_FACTORY_H_INCLUDED
-#define LIMBDA_TESTING_UNIT_TEST_FACTORY_H_INCLUDED
+#ifndef CUTEE_UNIT_TEST_FACTORY_H_INCLUDED
+#define CUTEE_UNIT_TEST_FACTORY_H_INCLUDED
 
 #include <string>
 #include <vector>
 
-#include "unit_test.h"
-#include "performance_test.h"
+#include "unit_test.hpp"
+#include "performance_test.hpp"
 
-namespace libmda
-{
-namespace testing
+namespace cutee
 {
 
 //
@@ -111,7 +109,6 @@ class unit_test_holder
       std::vector<unit_test*> m_tests;
 };
 
-} // namespace testing
-} // namespace libmda
+} /* namespace cutee */
 
-#endif // LIMBDA_TESTING_UNIT_TEST_FACTORY_H_INCLUDED
+#endif /* CUTEE_UNIT_TEST_FACTORY_H_INCLUDED */

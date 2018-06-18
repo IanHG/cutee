@@ -1,18 +1,18 @@
-#ifndef LIBMDA_TESTING_TEST_CASE_H
-#define LIBMDA_TESTING_TEST_CASE_H
+#ifndef CUTEE_TEST_CASE_H
+#define CUTEE_TEST_CASE_H
 
 #include <iostream>
 
-#include "unit_test.h"
-#include "unit_test_factory.h"
-#include "test_failed.h"
+#include "unit_test.hpp"
+#include "unit_test_factory.hpp"
+#include "test_failed.hpp"
 
-namespace libmda
-{
-namespace testing
+namespace cutee
 {
 
-class test_case: virtual protected unit_test_holder, virtual public unit_test
+class test_case
+   :  virtual protected unit_test_holder
+   ,  virtual public    unit_test
 {
    private:
       unsigned m_num_test;
@@ -80,7 +80,6 @@ class test_case: virtual protected unit_test_holder, virtual public unit_test
       }
 };
 
-} // namespace testing
-} // namespace libmda
+} /* namespace cutee */
 
-#endif /* LIBMDA_TESTING_TEST_CASE_H */
+#endif /* CUTEE_TEST_CASE_H */

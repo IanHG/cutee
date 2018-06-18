@@ -1,18 +1,17 @@
-#ifndef LIBMDA_TESTING_TEST_SUITE_H
-#define LIBMDA_TESTING_TEST_SUITE_H
+#ifndef CUTEE_TEST_SUITE_H
+#define CUTEE_TEST_SUITE_H
 
 #include <iostream>
 
-#include "unit_test.h"
-#include "unit_test_factory.h"
-#include "timer.h"
+#include "unit_test.hpp"
+#include "unit_test_factory.hpp"
+#include "timer.hpp"
 
-namespace libmda
-{
-namespace testing
+namespace cutee
 {
 
-class test_suite: public unit_test_holder
+class test_suite
+   :  public unit_test_holder
 {
    private:
       typedef unsigned int count_type;
@@ -110,7 +109,6 @@ class test_suite: public unit_test_holder
       }
 };
 
-} // namespace testing
-} // namespace libmda
+} /* namespace cutee */
 
-#endif /* LIBMDA_TESTING_TEST_SUITE_H */
+#endif /* CUTEE_TEST_SUITE_H */

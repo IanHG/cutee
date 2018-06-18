@@ -1,5 +1,5 @@
-#ifndef LIBMDA_TESTING_FLOAT_IS_EQUAL_H_INCLUDED
-#define LIBMDA_TESTING_FLOAT_IS_EQUAL_H_INCLUDED
+#ifndef CUTEE_FLOAT_IS_EQUAL_H_INCLUDED
+#define CUTEE_FLOAT_IS_EQUAL_H_INCLUDED
 
 #include <limits>
 #include <complex>
@@ -8,9 +8,7 @@
 // std::conditional_t
                         
 
-namespace libmda
-{
-namespace numeric
+namespace cutee
 {
 namespace detail
 {
@@ -98,11 +96,7 @@ class floating_point
    {
       const int_type biased1 = sign_and_magnitude_to_biased(sam1);
       const int_type biased2 = sign_and_magnitude_to_biased(sam2);
-      //std::cout << " distance:" << ( (biased1 >= biased2) ? (biased1 - biased2) : (biased2 - biased1) ) << std::endl;
       
-      //std::cout << biased1 << std::endl;
-      //std::cout << biased2 << std::endl;
-
       return (biased1 >= biased2) ? (biased1 - biased2) : (biased2 - biased1);
    }
 
@@ -120,20 +114,6 @@ class floating_point
    {
       return distance_between_sign_and_magnitude_numbers(u_.bits_,rhs.u_.bits_);
    }
-   
-   //bool almost_equal_zero(int_type max_ulps = k_max_ulps) const
-   //{
-   //   floating_point rhs(std::numeric_limits<T>::epsilon());
-   //   if(negative())
-   //   {
-   //      return ((u_.bits_^k_sign_bit_mask) <= (rhs.u_.bits_ + max_ulps)); // <= max_ulps;
-   //   }
-   //   else
-   //   {
-   //      return (u_.bits_ <= (rhs.u_.bits_ + max_ulps));
-   //      //return distance_between_sign_and_magnitude_numbers(u_.bits_,rhs.u_.bits_) <= max_ulps;
-   //   }
-   //}
 
    int_type bits() const
    {
@@ -152,55 +132,6 @@ class floating_point
       int_type   bits_;
    } u_;
 };
-
-//template<class T>
-//union float_int
-//{
-//   using float_type = T;
-//   using int_type   = integer_type<T>;
-//   
-//   float_int(const float_type a_float):  
-//      m_float(a_float) 
-//   { 
-//   };
-//
-//   const float_type m_float;
-//   const int_type   m_int;
-//};
-//
-// conversion from int to float (OLD STRUCT... ABOVE IS THE NEW ONE!)
-//
-//template<typename T>
-//union int_float
-//{
-//   using float_type = T;
-//   using int_type   = integer_type<T>;
-//   
-//   int_float(const int_type a_int):  
-//      m_int(a_int) 
-//   { 
-//   };
-//
-//   const float_type m_float;
-//   const int_type   m_int;
-//};
-
-//
-// old implementation (name has now changed)
-//
-//template<typename T, typename I = integer_type<T> >
-//bool float_is_equal(const T a_lhs, const T a_rhs, const I max_ulps_diff = 2)
-//{
-//   //std::cout << a_lhs << std::endl;
-//   //std::cout << a_rhs << std::endl; 
-//
-//   const float_int<T> lhs(a_lhs);
-//   const float_int<T> rhs(a_rhs);
-//   
-//   //std::cout << "ulps: " << lhs.m_int - rhs.m_int << std::endl;
-//
-//   return std::abs(lhs.m_int - rhs.m_int) <= max_ulps_diff;
-//}
 
 //
 //
@@ -406,7 +337,6 @@ inline bool float_numlt_zero(const T a_lhs, const U a_comp, const integer_type<T
    return !float_numgeq_zero(a_lhs, a_comp, max_ulps_diff); 
 }
 
-} /* namespace numeric */
-} /* namespace libmda */
+} /* namespace cutee */
 
-#endif /* LIBMDA_TESTING_FLOAT_IS_EQUAL_H_INCLUDED */
+#endif /* CUTEE_FLOAT_IS_EQUAL_H_INCLUDED */

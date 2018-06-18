@@ -7,7 +7,7 @@
 cmake_minimum_required(VERSION 3.9)
 
 # Describe project
-project(utest VERSION 1.0.0 DESCRIPTION "Minimal Unit Testing library.")
+project(cutee VERSION 1.0.0 DESCRIPTION "Minimal Unit Testing library.")
 set (CMAKE_CXX_STANDARD 14)
 
 ################################################################################
@@ -26,16 +26,29 @@ target_include_directories(objlib PRIVATE .) # Set main dir as search path
 set_property(TARGET objlib PROPERTY POSITION_INDEPENDENT_CODE 1)
 
 # Add dynamic library
-add_library(utest SHARED $<TARGET_OBJECTS:objlib>)
-set_target_properties(utest PROPERTIES VERSION ${PROJECT_VERSION})
-set_target_properties(utest PROPERTIES SOVERSION 1)
-set_target_properties(utest PROPERTIES PUBLIC_HEADER include/unit_test.h)
+add_library(cutee SHARED $<TARGET_OBJECTS:objlib>)
+set_target_properties(cutee PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(cutee PROPERTIES SOVERSION 1)
+set_target_properties(cutee PROPERTIES PUBLIC_HEADER 
+"\
+include/cutee.hpp;\
+include/failed_data.hpp;\
+include/float_eq.hpp;\
+include/performance_test.hpp;\
+include/test_case.hpp;\
+include/test_failed.hpp;\
+include/test_suite.hpp;\
+include/timer.hpp;\
+include/unit_assert.hpp;\
+include/unit_test_factory.hpp;\
+include/unit_test.hpp\
+")
 
 # Add static library 
-add_library(utest_static STATIC $<TARGET_OBJECTS:objlib>)
-set_target_properties(utest_static PROPERTIES VERSION ${PROJECT_VERSION})
-set_target_properties(utest_static PROPERTIES SOVERSION 1)
-set_target_properties(utest_static PROPERTIES PUBLIC_HEADER include/unit_test.h)
+add_library(cutee_static STATIC $<TARGET_OBJECTS:objlib>)
+set_target_properties(cutee_static PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(cutee_static PROPERTIES SOVERSION 1)
+#set_target_properties(cutee_static PROPERTIES PUBLIC_HEADER include/unit_test.hpp)
 
 ################################################################################
 #
@@ -45,11 +58,12 @@ set_target_properties(utest_static PROPERTIES PUBLIC_HEADER include/unit_test.h)
 # Install part
 include(GNUInstallDirs)
 
-install(TARGETS utest
+install(TARGETS cutee
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
 
-install(TARGETS utest_static
+install(TARGETS cutee_static
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}

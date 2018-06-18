@@ -1,12 +1,9 @@
-#include "include/unit_test.h"
+#include "include/unit_test.hpp"
 
-namespace libmda
-{
-namespace testing
+namespace cutee
 {
 
 std::string default_test_name::m_name="default_test";
 unsigned int default_test_name::m_num=0;
 
-} /* namespace testing */
-} /* namespace libmda */
+} /* namespace cutee */

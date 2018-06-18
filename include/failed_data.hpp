@@ -1,15 +1,12 @@
-#ifndef LIBMDA_TESTING_FAILED_DATA_H_INCLUDED
-#define LIBMDA_TESTING_FAILED_DATA_H_INCLUDED
+#ifndef CUTEE_FAILED_DATA_H_INCLUDED
+#define CUTEE_FAILED_DATA_H_INCLUDED
 
 #include<string>
 #include<iostream>
 #include<sstream>
-
 #include<vector>
 
-namespace libmda
-{
-namespace testing
+namespace cutee
 {
 
 template<class T>
@@ -84,7 +81,6 @@ failed_data<T, U>* failed_data_factory(const T& a_expected, const U& a_got)
 //
 void failed_data_destroy(failed_data_base* a_failed_data);
 
-} // namespace testing
-} // namespace libmda
+} /* namespace cutie */
 
-#endif // LIBMDA_TESTING_TEST_FAILED_H_INCLUDED
+#endif /* CUTEE_TESTING_TEST_FAILED_H_INCLUDED */

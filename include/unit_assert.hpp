@@ -1,12 +1,10 @@
-#ifndef LIBMDA_TESTING_UNIT_ASSERT_H_INCLUDED
-#define LIBMDA_TESTING_UNIT_ASSERT_H_INCLUDED
+#ifndef CUTEE_UNIT_ASSERT_H_INCLUDED
+#define CUTEE_UNIT_ASSERT_H_INCLUDED
 
 #include <string>
-#include "float_eq.h"
+#include "float_eq.hpp"
 
-namespace libmda
-{
-namespace testing
+namespace cutee
 {
 
 namespace detail
@@ -94,7 +92,7 @@ inline void unit_assert_not_equal(std::string name, detail::unit_assert_data<A,E
 template<class A, class E>
 inline void unit_assert_fequal(std::string name, detail::unit_assert_data<A,E>&& data, detail::file_info&& finfo)
 {
-   if(!numeric::float_eq(data._actual,data._expected))
+   if(!float_eq(data._actual,data._expected))
       throw test_failed(name,finfo._file.c_str(),finfo._line,data._message,data._expected,data._actual);
 }
 
@@ -111,7 +109,7 @@ inline void unit_assert_fequal(std::string name, detail::unit_assert_data<A,E>&&
 //
 #define UNIT_ASSERT(a,b) \
    unit_test::incr_num_assertions(); \
-   libmda::testing::unit_assert(this->name(),libmda::testing::make_unit_assert_data((a),true,(b)),libmda::testing::make_file_info(__FILE__,__LINE__));
+   cutee::unit_assert(this->name(),cutee::make_unit_assert_data((a),true,(b)),cutee::make_file_info(__FILE__,__LINE__));
 
 //
 // do assertion and increase assertion counter
@@ -125,7 +123,7 @@ inline void unit_assert_fequal(std::string name, detail::unit_assert_data<A,E>&&
 //
 #define UNIT_ASSERT_EQUAL(a,b,c) \
    unit_test::incr_num_assertions(); \
-   libmda::testing::unit_assert_equal(this->name(),libmda::testing::make_unit_assert_data((a),(b),(c)),libmda::testing::make_file_info(__FILE__,__LINE__));
+   cutee::unit_assert_equal(this->name(),cutee::make_unit_assert_data((a),(b),(c)),cutee::make_file_info(__FILE__,__LINE__));
 
 #define UNIT_ASSERT_EQUAL_OLD(a,b,c) \
    unit_test::incr_num_assertions(); \
@@ -136,18 +134,18 @@ inline void unit_assert_fequal(std::string name, detail::unit_assert_data<A,E>&&
 //
 #define UNIT_ASSERT_NOT_EQUAL(a,b,c) \
    unit_test::incr_num_assertions(); \
-   libmda::testing::unit_assert_not_equal(this->name(),libmda::testing::make_unit_assert_data((a),(b),(c)),libmda::testing::make_file_info(__FILE__,__LINE__));
+   cutee::unit_assert_not_equal(this->name(),cutee::make_unit_assert_data((a),(b),(c)),cutee::make_file_info(__FILE__,__LINE__));
 
 //
 // do assertion and increase assertion counter
 //
 #define UNIT_ASSERT_FEQUAL(a,b,c) \
    unit_test::incr_num_assertions(); \
-   libmda::testing::unit_assert_fequal(this->name(),libmda::testing::make_unit_assert_data((a),(b),(c)),libmda::testing::make_file_info(__FILE__,__LINE__));
+   cutee::unit_assert_fequal(this->name(),cutee::make_unit_assert_data((a),(b),(c)),cutee::make_file_info(__FILE__,__LINE__));
 
 #define UNIT_ASSERT_FEQUAL_OLD(a,b,c) \
    unit_test::incr_num_assertions(); \
-   if(!libmda::numeric::float_eq((a),(b))) \
+   if(!cutee::float_eq((a),(b))) \
       throw test_failed(this->name(),__FILE__,__LINE__,(c),(b),(a))
 
 //
@@ -155,10 +153,9 @@ inline void unit_assert_fequal(std::string name, detail::unit_assert_data<A,E>&&
 //
 #define UNIT_ASSERT_FEQUAL_PREC(a,b,c,d) \
    unit_test::incr_num_assertions(); \
-   if(!libmda::numeric::float_eq((a),(b),(c))) \
+   if(!cutee::float_eq((a),(b),(c))) \
       throw test_failed(this->name(),__FILE__,__LINE__,(d),(b),(a))
 
-} // namespace testing
-} // namespace libmda
+} /* namespace cutee */
 
-#endif /* LIBMDA_TESTING_UNIT_ASSERT_H_INCLUDED */
+#endif /* CUTEE_UNIT_ASSERT_H_INCLUDED */

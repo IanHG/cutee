@@ -1,14 +1,12 @@
-#ifndef LIBMDA_TESTING_UNIT_TEST_H
-#define LIBMDA_TESTING_UNIT_TEST_H
+#ifndef CUTEE_UNIT_TEST_H
+#define CUTEE_UNIT_TEST_H
 
 #include<string>
 
-#include"test_failed.h"
-#include"unit_assert.h"
+#include"test_failed.hpp"
+#include"unit_assert.hpp"
 
-namespace libmda
-{
-namespace testing
+namespace cutee
 {
 
 
@@ -124,7 +122,6 @@ class default_test_name
       static unsigned int m_num;
 };
 
-} // namespace testing
-} // namespace libmda
+} /* namespace cutee */
 
-#endif /* LIBMDA_TESTING_UNIT_TEST_H */
+#endif /* CUTEE_UNIT_TEST_H */

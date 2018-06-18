@@ -1,8 +1,6 @@
-#include "include/unit_assert.h"
+#include "include/unit_assert.hpp"
 
-namespace libmda
-{
-namespace testing
+namespace cutee
 {
 
 detail::file_info make_file_info(const char* file, const unsigned int line)
@@ -10,5 +8,4 @@ detail::file_info make_file_info(const char* file, const unsigned int line)
    return detail::file_info(file, line);
 }
 
-} /* namespace libmda */
-} /* namespace testing */
+} /* namespace cutee */
