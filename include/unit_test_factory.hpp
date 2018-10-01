@@ -72,6 +72,15 @@ class unit_test_holder
       }
       
       //
+      // add test with extra arguments
+      //
+      template<class T, typename... Args>
+      void add(const Args&... args)
+      { 
+         this->add_test(std::forward<Args>(args)...);
+      }
+      
+      //
       // add performance tests (N is num runs, T is test class type)
       //
       template<int N, class T>
