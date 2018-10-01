@@ -107,7 +107,17 @@ class test_suite
          m_timer.stop();
          end_output(a_ostream);
       }
+
+      /*!
+       * Interface for running the test suite.
+       */
+      void run(std::ostream& os = std::cout)
+      {
+         this->do_tests(os);
+      }
 };
+
+using suite = test_suite;
 
 } /* namespace cutee */
 
