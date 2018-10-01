@@ -32,7 +32,15 @@ class unit_test
       //
       // overloadable function for doing the actual test
       //
-      virtual void do_test() = 0;
+      virtual void do_test() 
+      {
+         this->run();
+      }
+      
+      //
+      // overloadable function for doing the actual test
+      //
+      virtual void run() = 0;
       
       //
       // overloadable function for optional setup test method
@@ -121,6 +129,8 @@ class default_test_name
       static std::string  m_name;
       static unsigned int m_num;
 };
+
+using test = unit_test;
 
 } /* namespace cutee */
 
