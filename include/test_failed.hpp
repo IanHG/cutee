@@ -37,7 +37,7 @@ struct output_float_dist<true>
    template<class T>
    static void apply(std::stringstream& s, const T& got, const T& expected)
    {
-      s << " dist: " << float_ulps(expected, got);
+      s << " dist: " << numeric::float_ulps(expected, got);
    }
 };
 
