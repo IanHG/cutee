@@ -92,7 +92,7 @@ inline void unit_assert_not_equal(std::string name, detail::unit_assert_data<A,E
 template<class A, class E>
 inline void unit_assert_fequal(std::string name, detail::unit_assert_data<A,E>&& data, detail::file_info&& finfo)
 {
-   if(!float_eq(data._actual,data._expected))
+   if(!numeric::float_eq(data._actual,data._expected))
       throw test_failed(name,finfo._file.c_str(),finfo._line,data._message,data._expected,data._actual);
 }
 
@@ -145,7 +145,7 @@ inline void unit_assert_fequal(std::string name, detail::unit_assert_data<A,E>&&
 
 #define UNIT_ASSERT_FEQUAL_OLD(a,b,c) \
    unit_test::incr_num_assertions(); \
-   if(!cutee::float_eq((a),(b))) \
+   if(!cutee::numeric::float_eq((a),(b))) \
       throw test_failed(this->name(),__FILE__,__LINE__,(c),(b),(a))
 
 //
@@ -153,7 +153,7 @@ inline void unit_assert_fequal(std::string name, detail::unit_assert_data<A,E>&&
 //
 #define UNIT_ASSERT_FEQUAL_PREC(a,b,c,d) \
    unit_test::incr_num_assertions(); \
-   if(!cutee::float_eq((a),(b),(c))) \
+   if(!cutee::numeric::float_eq((a),(b),(c))) \
       throw test_failed(this->name(),__FILE__,__LINE__,(d),(b),(a))
 
 } /* namespace cutee */

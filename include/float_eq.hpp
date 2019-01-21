@@ -10,6 +10,10 @@
 
 namespace cutee
 {
+
+namespace numeric 
+{
+
 namespace detail
 {
 
@@ -336,6 +340,8 @@ inline bool float_numlt_zero(const T a_lhs, const U a_comp, const integer_type<T
    // not less than or equal -> greater than
    return !float_numgeq_zero(a_lhs, a_comp, max_ulps_diff); 
 }
+
+} /* namespace numeric */
 
 } /* namespace cutee */
 

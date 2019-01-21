@@ -109,7 +109,15 @@ class unit_test_holder
       //
       // get number of tests
       //
-      int test_size() const 
+      auto test_size() const 
+      { 
+         return m_tests.size(); 
+      }
+      
+      //
+      // get number of tests
+      //
+      auto size() const 
       { 
          return m_tests.size(); 
       }
