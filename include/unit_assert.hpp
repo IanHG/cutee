@@ -146,7 +146,7 @@ inline void unit_assert_fequal(std::string name, detail::unit_assert_data<A,E>&&
 #define UNIT_ASSERT_FEQUAL_OLD(a,b,c) \
    unit_test::incr_num_assertions(); \
    if(!cutee::numeric::float_eq((a),(b))) \
-      throw test_failed(this->name(),__FILE__,__LINE__,(c),(b),(a))
+      throw cutee::test_failed(this->name(),__FILE__,__LINE__,(c),(b),(a))
 
 //
 // do assertion and increase assertion counter
@@ -154,7 +154,7 @@ inline void unit_assert_fequal(std::string name, detail::unit_assert_data<A,E>&&
 #define UNIT_ASSERT_FEQUAL_PREC(a,b,c,d) \
    unit_test::incr_num_assertions(); \
    if(!cutee::numeric::float_eq((a),(b),(c))) \
-      throw test_failed(this->name(),__FILE__,__LINE__,(d),(b),(a))
+      throw cutee::test_failed(this->name(),__FILE__,__LINE__,(d),(b),(a))
 
 } /* namespace cutee */
 
