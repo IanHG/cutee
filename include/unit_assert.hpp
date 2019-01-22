@@ -117,7 +117,7 @@ inline void unit_assert_fequal(std::string name, detail::unit_assert_data<A,E>&&
 // do assertion (will not increase assertion counter)
 //
 #define ASSERT(a,b) \
-   if(!(a)) throw test_failed("no name",__FILE__,__LINE__,(b),true,(a))
+   if(!(a)) throw cutee::test_failed("no name",__FILE__,__LINE__,(b),true,(a))
 
 //
 // do assertion and increase assertion counter (new type using wrappers, for only one evaluation of the arguments (a,b,c))
@@ -131,7 +131,7 @@ inline void unit_assert_fequal(std::string name, detail::unit_assert_data<A,E>&&
 //
 #define UNIT_ASSERT_OLD(a,b) \
    cutee::test::incr_num_assertions(); \
-   if(!(a)) throw test_failed(this->name(),__FILE__,__LINE__,(b),true,(a))
+   if(!(a)) throw cutee::test_failed(this->name(),__FILE__,__LINE__,(b),true,(a))
 
 //
 // do assertion and increase assertion counter
@@ -142,7 +142,7 @@ inline void unit_assert_fequal(std::string name, detail::unit_assert_data<A,E>&&
 
 #define UNIT_ASSERT_EQUAL_OLD(a,b,c) \
    cutee::test::incr_num_assertions(); \
-   if(!((b)==(a))) throw test_failed(this->name(),__FILE__,__LINE__,(c),(b),(a))
+   if(!((b)==(a))) throw cutee::test_failed(this->name(),__FILE__,__LINE__,(c),(b),(a))
 
 //
 // do assertion and increase assertion counter
