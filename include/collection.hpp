@@ -42,7 +42,7 @@ class collection
       //
       //
       //
-      void do_test()
+      void run()
       {
          for(int i=0; i<test_size(); ++i)
          {
