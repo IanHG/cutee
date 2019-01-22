@@ -97,6 +97,21 @@ inline void unit_assert_fequal(std::string name, detail::unit_assert_data<A,E>&&
 }
 
 //
+// undef if macro is set
+//
+#ifdef UNDEF_ASSERT_COMMANDS
+#undef ASSERT
+#undef UNIT_ASSERT
+#undef UNIT_ASSERT_OLD
+#undef UNIT_ASSERT_EQUAL
+#undef UNIT_ASSERT_EQUAL_OLD
+#undef UNIT_ASSERT_NOT_EQUAL
+#undef UNIT_ASSERT_FEQUAL
+#undef UNIT_ASSERT_FEQUAL_OLD
+#undef UNIT_ASSERT_FEQUAL_PREC
+#endif /* UNDEF_ASSERT_COMMANDS */
+
+//
 // ASSERTION MACROS
 //
 // do assertion (will not increase assertion counter)

@@ -10,7 +10,7 @@
 namespace cutee
 {
 
-class test_case
+class collection
    :  virtual protected unit_test_holder
    ,  virtual public    unit_test
 {
@@ -27,7 +27,7 @@ class test_case
       //
       //
       //
-      test_case(): 
+      collection(): 
          unit_test_holder(), unit_test(), m_num_test(0), m_failed(0)
       { 
       }
@@ -35,7 +35,7 @@ class test_case
       //
       //
       //
-      virtual ~test_case() 
+      virtual ~collection() 
       { 
       }
       
