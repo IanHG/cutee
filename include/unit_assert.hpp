@@ -171,6 +171,19 @@ inline void unit_assert_fequal(std::string name, detail::unit_assert_data<A,E>&&
    if(!cutee::numeric::float_eq((a),(b),(c))) \
       throw cutee::test_failed(this->name(),__FILE__,__LINE__,(d),(b),(a))
 
+//
+// do assertion and increase assertion counter
+//
+#define UNIT_ASSERT_FZERO(a,b,c) \
+   cutee::test::incr_num_assertions(); \
+	if (!cutee::numeric::float_numeq_zero((a),(b))) \
+	   throw cutee::test_failed(this->name(), __FILE__,__LINE__,(c), decltype(a)(0.), (a));
+
+#define UNIT_ASSERT_FZERO_PREC(a,b,c,d) \
+   cutee::test::incr_num_assertions(); \
+	if (!cutee::numeric::float_numeq_zero((a),(b),(c))) \
+	   throw cutee::test_failed(this->name(), __FILE__,__LINE__,(d), decltype(a)(0.), (a));
+
 } /* namespace cutee */
 
 #endif /* CUTEE_UNIT_ASSERT_H_INCLUDED */
