@@ -31,7 +31,6 @@ set_target_properties(cutee PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(cutee PROPERTIES SOVERSION 1)
 set_target_properties(cutee PROPERTIES PUBLIC_HEADER 
 "\
-include/cutee.hpp;\
 include/failed_data.hpp;\
 include/float_eq.hpp;\
 include/performance_test.hpp;\
@@ -60,11 +59,15 @@ include(GNUInstallDirs)
 
 install(TARGETS cutee
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cutee
     )
+
+install(FILES
+   include/cutee.hpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+   )
 
 install(TARGETS cutee_static
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cutee
     )
