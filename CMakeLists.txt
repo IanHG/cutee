@@ -63,7 +63,7 @@ install(TARGETS cutee
     )
 
 install(FILES
-   include/cutee.hpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+   include/cutee.hpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cutee
    )
 
 install(TARGETS cutee_static
