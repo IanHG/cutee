@@ -102,8 +102,9 @@ class unit_test_name: public A
 {
    public:
       template<typename... Args>
-      unit_test_name(const std::string a_name, Args... args): A(args...)
-                                                            , m_name(a_name) 
+      unit_test_name(const std::string a_name, Args&&... args)
+         :  A(std::forward<Args>(args)...)
+         ,  m_name(a_name) 
       { 
       }
 
