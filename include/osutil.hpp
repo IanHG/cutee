@@ -4,10 +4,6 @@
 #include <iostream>
 #include <typeinfo>
 
-namespace cutee
-{
-namespace detail
-{
 /**
  * Demangling stuff
  **/
@@ -16,6 +12,11 @@ namespace detail
 #include <memory>
 #include <cxxabi.h>
 
+namespace cutee
+{
+namespace detail
+{
+// Demangle function names
 inline std::string demangle(const char* name) 
 {
     int status = -4; // some arbitrary value to eliminate the compiler warning
@@ -28,13 +29,26 @@ inline std::string demangle(const char* name)
 
     return (status==0) ? res.get() : name ;
 }
+} /* namespace detail */
+} /* namespace cutee */
 #else
+namespace cutee
+{
+namespace detail
+{
 // does nothing if not g++
 inline std::string demangle(const char* name) 
 {
     return name;
 }
+} /* namespace detail */
+} /* namespace cutee */
 #endif
+
+namespace cutee
+{
+namespace detail
+{
 
 /**
  * Function checkers.
@@ -122,7 +136,7 @@ template
 std::ostream& operator<<(std::ostream& os, const ITERABLE& cont)
 {
 #if defined(CUTEE_OSTREAM_UTILITY_TYPE)
-   os << demangle(typeid(cont).name()) << " (";
+   os << cutee::detail::demangle(typeid(cont).name()) << " (";
 #else
    os << "(";
 #endif /* CUTEE_OSTREAM_UTILITY_TYPE */
