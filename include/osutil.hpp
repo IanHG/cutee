@@ -1,11 +1,8 @@
-#ifndef CUTEE_UTILP_HPP_INCLUDED
-#define CUTEE_UTILP_HPP_INCLUDED
+#ifndef CUTEE_OSUTIL_HPP_INCLUDED
+#define CUTEE_OSUTIL_HPP_INCLUDED
 
 #include <iostream>
 #include <typeinfo>
-
-template<class ITERABLE, void*>
-std::ostream& operator<<(std::ostream& os, const ITERABLE& iter);
 
 namespace cutee
 {
@@ -14,12 +11,12 @@ namespace detail
 /**
  * Demangling stuff
  **/
-#if defined(CUTEE_UTILP_PRINT_TYPE) && defined(__GNUG__)
+#if defined(CUTEE_OSTREAM_UTILITY_TYPE) && defined(__GNUG__)
 #include <cstdlib>
 #include <memory>
 #include <cxxabi.h>
 
-std::string demangle(const char* name) 
+inline std::string demangle(const char* name) 
 {
     int status = -4; // some arbitrary value to eliminate the compiler warning
    
@@ -33,7 +30,7 @@ std::string demangle(const char* name)
 }
 #else
 // does nothing if not g++
-std::string demangle(const char* name) 
+inline std::string demangle(const char* name) 
 {
     return name;
 }
@@ -124,11 +121,11 @@ template
    >
 std::ostream& operator<<(std::ostream& os, const ITERABLE& cont)
 {
-#if defined(CUTEE_UTILP_PRINT_TYPE)
+#if defined(CUTEE_OSTREAM_UTILITY_TYPE)
    os << demangle(typeid(cont).name()) << " (";
 #else
    os << "(";
-#endif /* CUTEE_UTILP_PRINT_TYPE */
+#endif /* CUTEE_OSTREAM_UTILITY_TYPE */
    for(auto it = cont.begin(), end = cont.end(); it != end; )
    {
       os << *it;
@@ -141,4 +138,4 @@ std::ostream& operator<<(std::ostream& os, const ITERABLE& cont)
    return os;
 }
 
-#endif /* CUTEE_UTILP_HPP_INCLUDED */
+#endif /* CUTEE_OSUTIL_HPP_INCLUDED */
