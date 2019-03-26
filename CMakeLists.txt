@@ -31,6 +31,7 @@ set_target_properties(cutee PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(cutee PROPERTIES SOVERSION 1)
 set_target_properties(cutee PROPERTIES PUBLIC_HEADER 
 "\
+include/osutil.hpp;\
 include/failed_data.hpp;\
 include/float_eq.hpp;\
 include/performance_test.hpp;\

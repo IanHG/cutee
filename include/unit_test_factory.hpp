@@ -49,7 +49,7 @@ class unit_test_holder
       //
       virtual ~unit_test_holder()
       { 
-         for(int i=0; i<m_tests.size(); ++i) 
+         for(decltype(m_tests.size()) i=0; i<m_tests.size(); ++i) 
             unit_test_destroy(m_tests[i]); 
       }
 

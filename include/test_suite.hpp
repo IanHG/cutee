@@ -31,7 +31,7 @@ class test_suite
                    << "   TESTS TO BE RUN: " << unit_test_holder::test_size() << "\n";
 
          // output tests that should be run
-         for(int i = 0; i < unit_test_holder::test_size(); ++i)
+         for(decltype(unit_test_holder::test_size()) i = 0; i < unit_test_holder::test_size(); ++i)
             a_ostream << "      " << this->get_test(i)->name() << "\n";
          
          // output some stats
@@ -49,7 +49,7 @@ class test_suite
          {
             a_ostream << "----------------------------------------------------------------------\n"
                       << "   FAILED TESTS:\n";
-            for(int i = 0; i < m_failed_tests.size(); ++i)
+            for(decltype(m_failed_tests.size()) i = 0; i < m_failed_tests.size(); ++i)
             {
                a_ostream << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
                          << m_failed_tests[i] << "\n";
@@ -76,7 +76,7 @@ class test_suite
       void do_tests(std::ostream& a_ostream = std::cout)
       { 
          m_timer.start();
-         for(int i=0; i<test_size(); ++i)
+         for(decltype(test_size()) i=0; i<test_size(); ++i)
          {
             get_test(i)->setup();    // setup test
             try

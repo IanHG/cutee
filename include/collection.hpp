@@ -44,7 +44,7 @@ class collection
       //
       void run()
       {
-         for(int i=0; i<test_size(); ++i)
+         for(decltype(test_size()) i=0; i<test_size(); ++i)
          {
             try
             {
