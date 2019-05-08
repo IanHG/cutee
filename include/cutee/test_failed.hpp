@@ -15,14 +15,29 @@ namespace cutee
 namespace detail
 {
 
+template<class T>
+struct is_complex
+   :  public std::false_type
+{
+   static_assert(std::is_floating_point<T>::value, "T must be floating-point type.");
+};
+template<class T>
+struct is_complex<std::complex<T>>
+   :  public std::true_type
+{
+   static_assert(std::is_floating_point<T>::value, "T must be floating-point type.");
+};
+
+
 template<bool>
-struct output_float_dist
+struct output_float_distance
 {
    template<class T>
    static void apply(std::stringstream& s, const T& got, const T& expected)
    {
       // do nothing
    }
+
    template<class T, class U>
    static void apply(std::stringstream& s, const T& got, const U& expected)
    {
@@ -32,12 +47,38 @@ struct output_float_dist
 
 // specialization for floating point
 template<>
-struct output_float_dist<true>
+struct output_float_distance<true>
 {
-   template<class T>
+   template
+      <  class T
+      ,  std::enable_if_t<std::is_floating_point<T>::value, void*> = nullptr
+      >
    static void apply(std::stringstream& s, const T& got, const T& expected)
    {
       s << " dist: " << numeric::float_ulps(expected, got);
+   }
+   
+   template
+      <  class T
+      ,  std::enable_if_t<std::is_floating_point<T>::value, void*> = nullptr
+      >
+   static void apply(std::stringstream& s, const std::complex<T>& got, const std::complex<T>& expected)
+   {
+      s  << " dist: (" 
+         << numeric::float_ulps(expected.real(), got.real()) 
+         << ", "
+         << numeric::float_ulps(expected.imag(), got.imag()) 
+         << ")"
+         ;
+   }
+
+   template
+      <  class T
+      ,  class U
+      >
+   static void apply(std::stringstream& s, const T& got, const U& expected)
+   {
+      static_assert(std::is_same<T, U>::value, "not the same types.");
    }
 };
 
@@ -71,7 +112,10 @@ struct test_failed
          m_pdata->expected(s);
          s << " got ";
          m_pdata->got(s);
-         detail::output_float_dist<std::is_floating_point<typename std::decay<T>::type>::value>::apply(s, a_got, a_expected);
+         detail::output_float_distance
+            <  std::is_floating_point<typename std::decay<T>::type>::value
+            || detail::is_complex<typename std::decay<T>::type>::value
+            >::apply(s, a_got, a_expected);
          m_message.append(" in file ");
          m_message.append(m_file);
          m_message.append(" on line ");

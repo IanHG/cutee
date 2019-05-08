@@ -201,7 +201,8 @@ template<class T
        > 
 bool float_eq(const std::complex<T>& a_lhs, const std::complex<T>& a_rhs, const integer_type<T> max_ulps_diff = 2)
 {
-   return float_eq(a_lhs.real(),a_rhs.real(),max_ulps_diff) && float_eq(a_lhs.imag(),a_rhs.imag(),max_ulps_diff);
+   return   float_eq(a_lhs.real(), a_rhs.real(), max_ulps_diff) 
+         && float_eq(a_lhs.imag(), a_rhs.imag(), max_ulps_diff);
 }
 
 /********************************/
