@@ -7,6 +7,7 @@
 #include "unit_test_factory.hpp"
 #include "timer.hpp"
 #include "exceptions.hpp"
+#include "message.hpp"
 
 namespace cutee
 {
@@ -22,6 +23,7 @@ class test_suite
       count_type m_failed;
       count_type m_num_test;
       std::vector<std::string> m_failed_tests;
+      message::format _format = message::fancy;
       
       void end_output(std::ostream& a_ostream)
       {
@@ -114,6 +116,9 @@ class test_suite
          end_output(a_ostream);
       }
       
+      /**
+       * Execute assertion
+       **/
       template<class... Ts>
       void execute_assertion(assertion<Ts...>&& asrt)
       {
@@ -123,7 +128,7 @@ class test_suite
          // Perform assertion
          if(!asrt.execute())
          {
-            throw exception::assertion_failed(std::move(asrt));
+            throw exception::assertion_failed(std::move(asrt), _format);
          }
       }
 

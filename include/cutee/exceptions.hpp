@@ -4,12 +4,16 @@
 #include <string>
 
 #include "assertion.hpp"
+#include "message.hpp"
 
 namespace cutee
 {
 namespace exception
 {
 
+/**
+ * Cutee exception base class
+ **/
 struct failed
 {
    virtual ~failed() noexcept = 0;
@@ -18,40 +22,29 @@ struct failed
 
 failed::~failed() { }
 
+/**
+ * Failed assertion exception
+ **/
 struct assertion_failed
    :  public failed
 {
    std::string _what;
    
    template<class... Ts>
-   static std::string __construct_what(const assertion<Ts...>& asrt)
+   static std::string __construct_what
+      (  const assertion<Ts...>& asrt
+      ,  const message::format&  form
+      )
    {
-      std::string message;
-      //std::stringstream s;
-      //s << std::boolalpha << std::scientific << std::setprecision(16); 
-      //s << " expected ";
-      //m_pdata->expected(s);
-      //s << " got ";
-      //m_pdata->got(s);
-      //detail::output_float_distance
-      //   <  std::is_floating_point<typename std::decay<T>::type>::value
-      //   || detail::is_complex<typename std::decay<T>::type>::value
-      //   >::apply(s, a_got, a_expected);
-      message.append(" in file ");
-      message.append(asrt._info._file);
-      message.append(" on line ");
-      message.append(std::to_string(asrt._info._line));
-      message.append("\n happened: ");
-      message.append(asrt._info._message);
-      message.append("\n");
-      //message.append(s.str());
-
-      return message;
+      return message::generate(asrt, form);
    }
    
    template<class... Ts>
-   assertion_failed(const assertion<Ts...>& asrt)
-      :  _what(__construct_what(asrt))
+   assertion_failed
+      (  const assertion<Ts...>& asrt
+      ,  const message::format&  form
+      )
+      :  _what(__construct_what(asrt, form))
    {
    }
 

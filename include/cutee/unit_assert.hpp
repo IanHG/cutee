@@ -144,9 +144,11 @@ inline void unit_assert_fequal(std::string name, detail::unit_assert_data<A,E>&&
 //
 // do assertion and increase assertion counter
 //
-//#define UNIT_ASSERT_EQUAL(a,b,c) \
-//   cutee::test::incr_num_assertions(); \
-//   cutee::unit_assert_equal(this->name(),cutee::make_unit_assert_data((a),(b),(c)),cutee::make_file_info(__FILE__,__LINE__));
+/*
+#define UNIT_ASSERT_EQUAL(a,b,c) \
+   cutee::test::incr_num_assertions(); \
+   cutee::unit_assert_equal(this->name(),cutee::make_unit_assert_data((a),(b),(c)),cutee::make_file_info(__FILE__,__LINE__));
+*/
 
 #define UNIT_ASSERT_EQUAL(a,b,c) \
    cutee::asserter::assert_equal(a, b, cutee::info{c, __FILE__, __LINE__});

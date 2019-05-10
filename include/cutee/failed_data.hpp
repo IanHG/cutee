@@ -6,45 +6,10 @@
 #include<sstream>
 
 #include<type_traits>
+#include "message.hpp"
 
 namespace cutee
 {
-
-namespace detail
-{
-#ifdef __clang__ 
-#define PRAGMA_PUSH \
-_Pragma("clang diagnostic push") \
-_Pragma("clang diagnostic ignored \"-Wundefined-inline\"") 
-#define PRAGMA_POP \
-_Pragma("clang diagnostic pop") 
-#else
-#define PRAGMA_PUSH
-#define PRAGMA_POP
-#endif 
-
-PRAGMA_PUSH
-template<class C>
-struct exists_operator_output
-{
-   private:
-      template<class T>
-      static constexpr auto check(T*)
-         -> typename std::is_same<decltype((std::declval<std::ostream&>()) << (std::declval<T>())), std::ostream&>::type;
-
-      template<class>
-      static constexpr std::false_type check(...);
-      
-      using type = decltype(check<C>(nullptr));
-
-   public:
-      static constexpr bool value = type::value;
-};
-PRAGMA_POP
-
-#undef PRAGMA_PUSH
-#undef PRAGMA_POP
-} /* namespace detail */
 
 //
 //
