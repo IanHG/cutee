@@ -19,8 +19,8 @@ template<class T>
 struct is_complex
    :  public std::false_type
 {
-   static_assert(std::is_floating_point<T>::value, "T must be floating-point type.");
 };
+
 template<class T>
 struct is_complex<std::complex<T>>
    :  public std::true_type
@@ -31,6 +31,7 @@ struct is_complex<std::complex<T>>
 
 template<bool>
 struct output_float_distance
+   :  public std::false_type
 {
    template<class T>
    static void apply(std::stringstream& s, const T& got, const T& expected)
@@ -48,6 +49,7 @@ struct output_float_distance
 // specialization for floating point
 template<>
 struct output_float_distance<true>
+   :  public std::true_type
 {
    template
       <  class T
@@ -78,7 +80,8 @@ struct output_float_distance<true>
       >
    static void apply(std::stringstream& s, const T& got, const U& expected)
    {
-      static_assert(std::is_same<T, U>::value, "not the same types.");
+      //static_assert(std::is_same<T, U>::value, "not the same types.");
+      s << " dist : N/A";
    }
 };
 

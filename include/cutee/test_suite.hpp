@@ -6,6 +6,7 @@
 #include "unit_test.hpp"
 #include "unit_test_factory.hpp"
 #include "timer.hpp"
+#include "exceptions.hpp"
 
 namespace cutee
 {
@@ -83,12 +84,17 @@ class test_suite
             {
                get_test(i)->do_test();
             }
-            catch(test_failed &e)
+            catch(const test_failed &e)
             {
                m_failed_tests.emplace_back(get_test(i)->name() + "\n" + e.what());
                ++m_failed;
             }
-            catch(std::exception& e)
+            catch(const exception::failed& e)
+            {
+               m_failed_tests.emplace_back(get_test(i)->name() + "\n" + e.what());
+               ++m_failed;
+            }
+            catch(const std::exception& e)
             {
                m_failed_tests.emplace_back(get_test(i)->name() + "\nstd::exception: " + e.what());
                ++m_failed;
@@ -106,6 +112,19 @@ class test_suite
          }
          m_timer.stop();
          end_output(a_ostream);
+      }
+      
+      template<class... Ts>
+      void execute_assertion(assertion<Ts...>&& asrt)
+      {
+         // Do some accounting
+         m_assertions += 1;
+         
+         // Perform assertion
+         if(!asrt.execute())
+         {
+            throw exception::assertion_failed(std::move(asrt));
+         }
       }
 
       /*!

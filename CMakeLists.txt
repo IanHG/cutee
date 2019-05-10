@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.9)
 
 # Describe project
 project(cutee VERSION 1.0.0 DESCRIPTION "Minimal Unit Testing library.")
-set (CMAKE_CXX_STANDARD 14)
+set (CMAKE_CXX_STANDARD 17)
 
 ################################################################################
 #
@@ -42,6 +42,7 @@ include/cutee/timer.hpp;\
 include/cutee/unit_assert.hpp;\
 include/cutee/unit_test_factory.hpp;\
 include/cutee/unit_test.hpp\
+include/cutee/asserter.hpp\
 ")
 
 # Add static library 

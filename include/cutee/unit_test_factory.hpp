@@ -13,20 +13,27 @@ namespace cutee
 //
 //
 //
-template<class T, typename... Args>
-unit_test* unit_test_factory(const std::string a_name, const Args&... args)
+template
+   <  class T
+   ,  typename... Args
+   >
+unit_test* unit_test_factory(const std::string a_name, Args&&... args)
 {
    //return new T(args...);
-   return new unit_test_name<T>(a_name, args...);
+   return new unit_test_name<T>(a_name, std::forward<Args>(args)...);
 }
 
 //
 //
 //
-template<class T, int N, typename... Args>
-unit_test* performance_test_factory(const std::string a_name, const Args&... args)
+template
+   <  class T
+   ,  int N
+   ,  typename... Args
+   >
+unit_test* performance_test_factory(const std::string a_name, Args&&... args)
 {
-   return new performance_test<N,unit_test_name<T> >(a_name, args...);
+   return new performance_test<N,unit_test_name<T> >(a_name, std::forward<Args>(args)...);
 }
 
 //
@@ -37,6 +44,71 @@ void unit_test_destroy(T* ptr)
 {
    delete ptr;
 }
+
+template<class... Ts>
+struct __false_on_ts
+   :  public std::false_type
+{
+};
+
+template<class... Ts>
+constexpr auto __false_on_ts_v = __false_on_ts<Ts...>::value;
+
+template<class... Ts>
+struct __function_return
+{
+   static_assert(__false_on_ts_v<Ts...>, "Must provide a function");
+};
+
+template<class R, class... Args>
+struct __function_return<R(&)(Args...)>
+{
+   using type = R;
+};
+
+template<class... Ts>
+using __function_return_t = typename __function_return<Ts...>::type;
+
+//template<class F, class S, class... Args>
+template<class S, class F, class... Args>
+struct __function_wrap
+   : public cutee::unit_test
+{
+   F                   _fcn;
+   std::tuple<Args...> _args;
+
+   //__function_wrap(F&& fcn, S&& msg, Args&&... args)
+   __function_wrap(F&& fcn, Args&&... args)
+      :  _fcn (std::forward<F>(fcn))
+      ,  _args(std::forward_as_tuple(args...))
+   {
+   }
+
+   template<std::size_t ...I>
+   void call_func(std::index_sequence<I...>)
+   { 
+      //UNIT_ASSERT(_fcn(std::get<I>(_args)...), _msg);
+      if constexpr(std::is_same_v<__function_return_t<F>, bool>)
+      {
+         UNIT_ASSERT(_fcn(std::get<I>(_args)...), "Failed");
+      }
+      else
+      {
+         std::cout << " CALLING " << std::endl;
+         _fcn(std::get<I>(_args)...);
+      }
+   }
+
+   void run() 
+   {
+      call_func(std::index_sequence_for<Args...>{});
+   }
+
+   std::string name() const 
+   { 
+      return std::string{"__function_wrap"}; 
+   }
+};
 
 //
 //
@@ -66,18 +138,24 @@ class unit_test_holder
       // add test with extra arguments
       //
       template<class T, typename... Args>
-      void add_test(const std::string a_name, const Args&... args)
+      void add_test(const std::string a_name, Args&&... args)
       { 
-         m_tests.push_back(unit_test_factory<T>(a_name, args...)); 
+         m_tests.push_back(unit_test_factory<T>(a_name, std::forward<Args>(args)...)); 
       }
       
       //
       // add test with extra arguments
       //
       template<class T, typename... Args>
-      void add(const Args&... args)
+      void add(Args&&... args)
       { 
          this->add_test(std::forward<Args>(args)...);
+      }
+
+      template<class... Args>
+      void add_function(Args&&... args)
+      {
+         this->add_test<__function_wrap<Args...> >(std::forward<Args>(args)...);
       }
       
       //
@@ -93,9 +171,9 @@ class unit_test_holder
       // add performance tests (N is num runs, T is test class type)
       //
       template<int N, class T, typename... Args>
-      void add_performance_test(const std::string a_name, const Args&... args)
+      void add_performance_test(const std::string a_name, Args&&... args)
       { 
-         m_tests.push_back(performance_test_factory<T,N>(a_name,args...)); 
+         m_tests.push_back(performance_test_factory<T,N>(a_name, std::forward<Args>(args)...)); 
       }
       
       //

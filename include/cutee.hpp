@@ -5,6 +5,8 @@
 #include "cutee/osutil.hpp"
 #endif /* CUTEE_OSTREAM_UTILITY */
 
+#include "cutee/asserter.hpp"
+#include "cutee/exceptions.hpp"
 #include "cutee/failed_data.hpp"
 #include "cutee/float_eq.hpp"
 #include "cutee/performance_test.hpp"
