@@ -4,6 +4,7 @@
 #include <string>
 
 #include "assertion.hpp"
+#include "formater.hpp"
 #include "message.hpp"
 
 namespace cutee
@@ -33,7 +34,7 @@ struct assertion_failed
    template<class... Ts>
    static std::string __construct_what
       (  const assertion<Ts...>& asrt
-      ,  const message::format&  form
+      ,  const formater&  form
       )
    {
       return message::generate(asrt, form);
@@ -42,7 +43,7 @@ struct assertion_failed
    template<class... Ts>
    assertion_failed
       (  const assertion<Ts...>& asrt
-      ,  const message::format&  form
+      ,  const formater&  form
       )
       :  _what(__construct_what(asrt, form))
    {

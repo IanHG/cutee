@@ -43,7 +43,7 @@ inline std::string demangle(const char* name)
 }
 } /* namespace detail */
 } /* namespace cutee */
-#endif
+#endif /* CUTEE_OSTREAM_UTILITY_TYPE && __GNUG__ */
 
 namespace cutee
 {
@@ -120,6 +120,7 @@ PRAGMA_POP
 
 } /* namespace cutee */
 
+#ifdef CUTEE_OSTREAM_UTILITY
 /**
  * Awesome output operator for iterable type.
  **/
@@ -135,11 +136,11 @@ template
    >
 std::ostream& operator<<(std::ostream& os, const ITERABLE& cont)
 {
-#if defined(CUTEE_OSTREAM_UTILITY_TYPE)
-   os << cutee::detail::demangle(typeid(cont).name()) << " (";
-#else
+//#if defined(CUTEE_OSTREAM_UTILITY_TYPE)
+//   os << cutee::detail::demangle(typeid(cont).name()) << " (";
+//#else
    os << "(";
-#endif /* CUTEE_OSTREAM_UTILITY_TYPE */
+//#endif /* CUTEE_OSTREAM_UTILITY_TYPE */
    for(auto it = cont.begin(), end = cont.end(); it != end; )
    {
       os << *it;
@@ -151,5 +152,6 @@ std::ostream& operator<<(std::ostream& os, const ITERABLE& cont)
    os << ")";
    return os;
 }
+#endif /* CUTEE_OSTREAM_UTILITY */
 
 #endif /* CUTEE_OSUTIL_HPP_INCLUDED */

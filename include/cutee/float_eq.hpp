@@ -205,6 +205,27 @@ bool float_eq(const std::complex<T>& a_lhs, const std::complex<T>& a_rhs, const 
          && float_eq(a_lhs.imag(), a_rhs.imag(), max_ulps_diff);
 }
 
+template
+   <  class T
+   ,  typename std::enable_if_t<std::is_floating_point_v<T> >* = nullptr
+   >
+bool float_eq
+   (  const std::vector<T>& a_lhs
+   ,  const std::vector<T>& a_rhs
+   ,  const integer_type<T> max_ulps_diff = 2
+   )
+{
+   bool equal = (a_lhs.size() == a_rhs.size());
+   if (equal)
+   {
+      for(decltype(a_lhs.size()) i = 0; i < a_lhs.size(); ++i)
+      {
+         equal = equal && float_eq(a_lhs[i], a_rhs[i]);
+      }
+   }
+   return equal;
+}
+
 /********************************/
 // float equal to zero ?? EXPERIMENTAL !
 /********************************/

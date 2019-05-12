@@ -36,6 +36,23 @@ struct asserter
     * Assertions
     **/
    /* Assert float equal with precision */
+   template<class T>
+   static void assertt(T&& t, info&& i)
+   {
+      __assert_suite_ptr();
+      _suite_ptr->execute_assertion
+         (  assertion<T>{
+               [](T&& lhs){
+                  return bool(lhs);
+               }
+               ,  std::forward_as_tuple(std::forward<T>(t))
+               ,  std::move(i)
+            }
+         
+         );
+   }
+
+   /* Assert float equal with precision */
    template<class T, class U>
    static void assert_equal(T&& t, U&& u, info&& i)
    {
@@ -76,10 +93,14 @@ struct asserter
 /**
  * Assertion Macros
  **/
+#define F_UNIT_ASSERT(a, b) \
+   cutee::asserter::assertt(a, cutee::info{b, __FILE__, __LINE__});
+
 #define F_UNIT_ASSERT_FEQUAL(a, b, c) \
    cutee::asserter::assert_float_equal_prec(a, b, 2, cutee::info{c, __FILE__, __LINE__});
 
 #define F_UNIT_ASSERT_EQUAL(a, b, c) \
    cutee::asserter::assert_equal(a, b, cutee::info{c, __FILE__, __LINE__});
+
 
 #endif /* CUTEE_ASSERTER_HPP_INCLUDED */

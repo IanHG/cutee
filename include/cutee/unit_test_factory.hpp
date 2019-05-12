@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "asserter.hpp"
 #include "unit_test.hpp"
 #include "performance_test.hpp"
 
@@ -87,14 +88,13 @@ struct __function_wrap
    template<std::size_t ...I>
    void call_func(std::index_sequence<I...>)
    { 
-      //UNIT_ASSERT(_fcn(std::get<I>(_args)...), _msg);
       if constexpr(std::is_same_v<__function_return_t<F>, bool>)
       {
+         //F_UNIT_ASSERT(_fcn(std::get<I>(_args)...), "Failed");
          UNIT_ASSERT(_fcn(std::get<I>(_args)...), "Failed");
       }
       else
       {
-         std::cout << " CALLING " << std::endl;
          _fcn(std::get<I>(_args)...);
       }
    }

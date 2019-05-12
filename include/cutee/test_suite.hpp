@@ -23,11 +23,12 @@ class test_suite
       count_type m_failed;
       count_type m_num_test;
       std::vector<std::string> m_failed_tests;
-      message::format _format = message::fancy;
+      std::unique_ptr<formater> _formater = std::unique_ptr<formater>{ new fancy_formater };
       
       void end_output(std::ostream& a_ostream)
       {
          // output header
+         a_ostream << _formater->bold_on();
          a_ostream << "======================================================================\n"
                    << "   NAME: " << m_suite_name << "\n"
                    << "----------------------------------------------------------------------\n"
@@ -61,19 +62,27 @@ class test_suite
          
          // output bottom
          a_ostream << "----------------------------------------------------------------------\n"
+                   << (m_failed ? _formater->warning_color() : _formater->file_color())
                    << (m_failed ? "   UNIT TEST FAILED!\n" : "   SUCCESS\n")
+                   << _formater->default_color()
                    << "======================================================================\n" << std::flush;
+         a_ostream << _formater->bold_off();
       }
    public:
-      test_suite(std::string a_suite_name = "default_suite")
-         : 
-            unit_test_holder()
+      test_suite
+         (  std::string a_suite_name = "default_suite"
+         ,  const format& form = format::fancy
+         )
+         :  unit_test_holder()
          ,  m_suite_name(a_suite_name)
          ,  m_timer()
          ,  m_assertions(0)
          ,  m_failed(0)
          ,  m_num_test(0)
-      { }
+         ,  _formater{format::create(form)}
+      { 
+      }
+      
       ~test_suite() = default;
 
       void do_tests(std::ostream& a_ostream = std::cout)
@@ -128,7 +137,7 @@ class test_suite
          // Perform assertion
          if(!asrt.execute())
          {
-            throw exception::assertion_failed(std::move(asrt), _format);
+            throw exception::assertion_failed(std::move(asrt), *_formater);
          }
       }
 

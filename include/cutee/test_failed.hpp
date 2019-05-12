@@ -42,10 +42,10 @@ struct test_failed
          m_pdata->expected(s);
          s << " got ";
          m_pdata->got(s);
-         detail::output_float_distance
-            <  std::is_floating_point<typename std::decay<T>::type>::value
-            || detail::is_complex<typename std::decay<T>::type>::value
-            >::apply(s, a_got, a_expected);
+         //detail::output_float_distance
+         //   <  std::is_floating_point<typename std::decay<T>::type>::value
+         //   || detail::is_complex<typename std::decay<T>::type>::value
+         //   >::apply(s, a_got, a_expected);
          m_message.append(" in file ");
          m_message.append(m_file);
          m_message.append(" on line ");
