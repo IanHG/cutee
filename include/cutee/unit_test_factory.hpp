@@ -63,8 +63,8 @@ struct __function_return
 
 template<class T>
 struct __function_return<T>
+   :  public __function_return<decltype(&T::operator())>
 {
-   using type = decltype(&T::operator());
 };
 
 template<class R, class... Args>
@@ -94,6 +94,8 @@ struct __function_return<std::function<R(Args...)> >
 template<class... Ts>
 using __function_return_t = typename __function_return<Ts...>::type;
 
+void unit_assert_fcn(bool, const std::string&, const char*, int);
+
 //template<class F, class S, class... Args>
 template<class S, class F, class... Args>
 struct __function_wrap
@@ -114,8 +116,8 @@ struct __function_wrap
    { 
       if constexpr(std::is_same_v<__function_return_t<F>, bool>)
       {
-         //F_UNIT_ASSERT(_fcn(std::get<I>(_args)...), "Function failed!");
-         UNIT_ASSERT(_fcn(std::get<I>(_args)...), "Function failed!");
+         //unit_assert_fcn(_fcn(std::get<I>(_args)...), "Function failed!", __FILE__, __LINE__);
+         unit_assert_fcn(_fcn(std::get<I>(_args)...), "Function failed!", "", 0);
       }
       else
       {

@@ -50,7 +50,7 @@ class test_suite
          }
 
          a_ostream   << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
-                     << "   *** " << name << " ***\n"
+                     << _formater->name_color() << "   *** " << name << " ***\n" << _formater->default_color()
                      << msg;
       }
    public:
@@ -110,7 +110,7 @@ void test_suite::header_to_stream(std::ostream& a_ostream)
    // output header
    a_ostream << _formater->bold_on();
    a_ostream << "======================================================================\n"
-             << "   NAME: " << this->_name << "\n"
+             << "   NAME: " << _formater->name_color() << this->_name << _formater->default_color() << "\n"
              << "----------------------------------------------------------------------\n"
              << "   TESTS TO BE RUN: " << unit_test_holder::test_size() << "\n";
 

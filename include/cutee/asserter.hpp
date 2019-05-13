@@ -87,6 +87,11 @@ struct asserter
    }
 };
 
+inline void unit_assert_fcn(bool check, const std::string& message, const char* file, int line)
+{
+   cutee::asserter::assertt(check, cutee::info{message, file, line});
+}
+
 } /* namespace cutee */
 
 #endif /* CUTEE_ASSERTER_HPP_INCLUDED */

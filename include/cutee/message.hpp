@@ -102,9 +102,11 @@ struct type_sink
 template
    <  class T
    ,  class U
-   ,  class Enable = typename type_sink<T, U>::type
+   //,  class Enable = typename type_sink<T, U>::type
+   ,  class Enable = void
    >
 struct has_distance
+   :  public std::false_type
 {
 };
 
@@ -242,7 +244,17 @@ struct message
       s_str << std::left << std::setprecision(16) << std::scientific << std::boolalpha; 
       s_str << tab << std::setw(short_width) << "error" << form.warning_color() << asrt._info._message << form.default_color()
             << "\n"
-            << tab << std::setw(short_width) << "file"  << form.file_color() << asrt._info._file << ":" << asrt._info._line  << form.default_color()
+            << tab << std::setw(short_width) << "file"  
+            << form.file_color();
+      if(!asrt._info._file.empty())
+      {
+         s_str << asrt._info._file << ":" << asrt._info._line;
+      }
+      else
+      {
+         s_str << "N/A";
+      }
+      s_str << form.default_color()
             << "\n\n";
       
 
@@ -307,14 +319,6 @@ struct message
       
       return s_str.str();
    }
-
-   ///**
-   // * Generate default message (Mostly to silence compiler warning...)
-   // **/
-   //static std::string __default()
-   //{
-   //   return "";
-   //}
       
    /**
     * Generate message dispatcher

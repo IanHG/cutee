@@ -17,6 +17,8 @@ struct formater
    virtual const char* file_color() const = 0;
 
    virtual const char* type_color() const = 0;
+   
+   virtual const char* name_color() const = 0;
 };
 
 template<class T>
@@ -57,6 +59,11 @@ struct formater_middleware
    {
       return self()._type_color;
    }
+   
+   const char* name_color() const
+   {
+      return self()._name_color;
+   }
 };
 
 struct fancy_formater
@@ -69,6 +76,7 @@ struct fancy_formater
    const char _warning_color[8] = "\e[31m\0";
    const char _type_color   [8] = "\e[32m\0";
    const char _file_color   [8] = "\e[33m\0";
+   const char _name_color   [8] = "\e[34m\0";
 };
 
 struct raw_formater
@@ -81,6 +89,7 @@ struct raw_formater
    const char _warning_color[2] = "\0";
    const char _type_color   [2] = "\0";
    const char _file_color   [2] = "\0";
+   const char _name_color   [2] = "\0";
 };
 
 struct format
