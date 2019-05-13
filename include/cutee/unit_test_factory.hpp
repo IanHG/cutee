@@ -61,8 +61,32 @@ struct __function_return
    static_assert(__false_on_ts_v<Ts...>, "Must provide a function");
 };
 
+template<class T>
+struct __function_return<T>
+{
+   using type = decltype(&T::operator());
+};
+
 template<class R, class... Args>
 struct __function_return<R(&)(Args...)>
+{
+   using type = R;
+};
+
+template<class R, class ClassType, class... Args>
+struct __function_return<R(ClassType::*)(Args...) const>
+{
+   using type = R;
+};
+
+template<class R, class ClassType, class... Args>
+struct __function_return<R(ClassType::*)(Args...)>
+{
+   using type = R;
+};
+
+template<class R, class... Args>
+struct __function_return<std::function<R(Args...)> >
 {
    using type = R;
 };
@@ -90,8 +114,8 @@ struct __function_wrap
    { 
       if constexpr(std::is_same_v<__function_return_t<F>, bool>)
       {
-         //F_UNIT_ASSERT(_fcn(std::get<I>(_args)...), "Failed");
-         UNIT_ASSERT(_fcn(std::get<I>(_args)...), "Failed");
+         //F_UNIT_ASSERT(_fcn(std::get<I>(_args)...), "Function failed!");
+         UNIT_ASSERT(_fcn(std::get<I>(_args)...), "Function failed!");
       }
       else
       {

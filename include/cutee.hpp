@@ -7,13 +7,16 @@
 
 //#include "cutee/asserter.hpp"
 #include "cutee/exceptions.hpp"
-#include "cutee/failed_data.hpp"
+#include "cutee/timer.hpp"
 #include "cutee/float_eq.hpp"
-#include "cutee/performance_test.hpp"
+
 #include "cutee/collection.hpp"
+
+#include "cutee/performance_test.hpp"
+#include "cutee/failed_data.hpp"
 #include "cutee/test_failed.hpp"
 #include "cutee/test_suite.hpp"
-#include "cutee/timer.hpp"
+#include "cutee/macros.hpp"
 #include "cutee/unit_assert.hpp"
 #include "cutee/unit_test_factory.hpp"
 #include "cutee/unit_test.hpp"
