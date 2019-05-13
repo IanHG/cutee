@@ -136,11 +136,7 @@ template
    >
 std::ostream& operator<<(std::ostream& os, const ITERABLE& cont)
 {
-//#if defined(CUTEE_OSTREAM_UTILITY_TYPE)
-//   os << cutee::detail::demangle(typeid(cont).name()) << " (";
-//#else
    os << "(";
-//#endif /* CUTEE_OSTREAM_UTILITY_TYPE */
    for(auto it = cont.begin(), end = cont.end(); it != end; )
    {
       os << *it;
