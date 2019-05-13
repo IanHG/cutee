@@ -1,6 +1,5 @@
 #include "test_suite.hpp"
 
-
 /**
  * Assertion Macros
  **/

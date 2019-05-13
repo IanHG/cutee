@@ -1,7 +1,6 @@
 #ifndef CUTEE_PERFORMANCE_TEST_H_INCLUDED
 #define CUTEE_PERFORMANCE_TEST_H_INCLUDED
 
-//#include<typeinfo>
 #include<iostream>
 
 #include "unit_test.hpp"

@@ -87,6 +87,9 @@ struct asserter
    }
 };
 
+/**
+ * Used by __function_wrapper to assert "bool" function.
+ **/
 inline void unit_assert_fcn(bool check, const std::string& message, const char* file, int line)
 {
    cutee::asserter::assertt(check, cutee::info{message, file, line});
