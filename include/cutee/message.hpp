@@ -6,11 +6,12 @@
 #include<sstream>
 #include<type_traits>
 #include<complex>
+#include<iomanip>
 
+#include "osutil.hpp"
 #include "formater.hpp"
 #include "assertion.hpp"
 #include "float_eq.hpp"
-#include "osutil.hpp"
 
 namespace cutee
 {

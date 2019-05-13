@@ -1,10 +1,11 @@
-#ifndef CUTEE_TEST_SUITE_H
-#define CUTEE_TEST_SUITE_H
+#ifndef CUTEE_TEST_SUITE_HPP_INCLUDED
+#define CUTEE_TEST_SUITE_HPP_INCLUDED
 
 #include <iostream>
 
 #include "unit_test.hpp"
 #include "unit_test_factory.hpp"
+
 #include "timer.hpp"
 #include "exceptions.hpp"
 #include "message.hpp"
@@ -15,115 +16,57 @@ namespace cutee
 class test_suite
    :  public unit_test_holder
 {
-   private:
-      typedef unsigned int count_type;
-      std::string m_suite_name;
-      clock_timer m_timer;
-      count_type m_assertions;
-      count_type m_failed;
-      count_type m_num_test;
-      std::vector<std::string> m_failed_tests;
-      std::unique_ptr<formater> _formater = std::unique_ptr<formater>{ new fancy_formater };
-      
-      void end_output(std::ostream& a_ostream)
-      {
-         // output header
-         a_ostream << _formater->bold_on();
-         a_ostream << "======================================================================\n"
-                   << "   NAME: " << m_suite_name << "\n"
-                   << "----------------------------------------------------------------------\n"
-                   << "   TESTS TO BE RUN: " << unit_test_holder::test_size() << "\n";
+   using counter_type = unsigned int;
+   
+   template<class I>
+   struct counter
+   {
+      using counter_type = I;
+   
+      counter_type _num_tests      = static_cast<counter_type>(0);
+      counter_type _num_assertions = static_cast<counter_type>(0); 
+      counter_type _num_failed     = static_cast<counter_type>(0);
+   };
 
-         // output tests that should be run
-         for(decltype(unit_test_holder::test_size()) i = 0; i < unit_test_holder::test_size(); ++i)
-            a_ostream << "      " << this->get_test(i)->name() << "\n";
-         
-         // output some stats
-         a_ostream << "----------------------------------------------------------------------\n"
-                   << "   STATISTICS:\n"
-                   << "      Finished tests in " << m_timer.tot_clocks_per_sec() << "s, "
-                   << m_num_test/m_timer.tot_clocks_per_sec() << " tests/s, "
-                   << m_assertions/m_timer.tot_clocks_per_sec() << " assertions/s \n"
-                   << "      " << m_num_test << " tests, "
-                   << m_assertions << " assertions, "
-                   << m_failed << " failed\n";
-         
-         // output failed tests
-         if(m_failed_tests.size())
+   private:
+      std::string                _name = "";
+      counter<counter_type>      _counter;
+      clock_timer                _timer;
+      std::unique_ptr<formater>  _formater = std::unique_ptr<formater>{ nullptr };
+      
+      void header_to_stream(std::ostream& a_ostream);
+       
+      void statistics_to_stream(std::ostream& a_ostream);
+
+      void footer_to_stream(std::ostream& a_ostream);
+       
+      void failed_to_stream(std::ostream& a_ostream, const std::string& name, const std::string& msg, bool& first)
+      {
+         if(first)
          {
             a_ostream << "----------------------------------------------------------------------\n"
                       << "   FAILED TESTS:\n";
-            for(decltype(m_failed_tests.size()) i = 0; i < m_failed_tests.size(); ++i)
-            {
-               a_ostream << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
-                         << m_failed_tests[i] << "\n";
-            }
+            first = false;
          }
-         
-         // output bottom
-         a_ostream << "----------------------------------------------------------------------\n"
-                   << (m_failed ? _formater->warning_color() : _formater->file_color())
-                   << (m_failed ? "   UNIT TEST FAILED!\n" : "   SUCCESS\n")
-                   << _formater->default_color()
-                   << "======================================================================\n" << std::flush;
-         a_ostream << _formater->bold_off();
+
+         a_ostream   << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+                     << "   *** " << name << " ***\n"
+                     << msg;
       }
    public:
       test_suite
-         (  std::string a_suite_name = "default_suite"
-         ,  const format& form = format::fancy
+         (  const std::string& name = "default_suite"
+         ,  const format&      form = format::fancy
          )
          :  unit_test_holder()
-         ,  m_suite_name(a_suite_name)
-         ,  m_timer()
-         ,  m_assertions(0)
-         ,  m_failed(0)
-         ,  m_num_test(0)
+         ,  _name(name)
          ,  _formater{format::create(form)}
       { 
       }
       
       ~test_suite() = default;
 
-      void do_tests(std::ostream& a_ostream = std::cout)
-      { 
-         m_timer.start();
-         for(decltype(test_size()) i=0; i<test_size(); ++i)
-         {
-            get_test(i)->setup();    // setup test
-            try
-            {
-               get_test(i)->do_test();
-            }
-            catch(const test_failed &e)
-            {
-               m_failed_tests.emplace_back(get_test(i)->name() + "\n" + e.what());
-               ++m_failed;
-            }
-            catch(const exception::failed& e)
-            {
-               m_failed_tests.emplace_back(get_test(i)->name() + "\n" + e.what());
-               ++m_failed;
-            }
-            catch(const std::exception& e)
-            {
-               m_failed_tests.emplace_back(get_test(i)->name() + "\nstd::exception: " + e.what());
-               ++m_failed;
-            }
-            catch(...)
-            {
-               m_failed_tests.emplace_back(get_test(i)->name() + "\n TEST SUITE CAUGHT SOMETHING ");
-               ++m_failed;
-            }
-
-            m_assertions+=get_test(i)->num_assertions();
-            m_num_test+=get_test(i)->num_test();
-            m_failed+=get_test(i)->num_failed(); // for test case (unit test will return 0 no matter)
-            get_test(i)->teardown(); // teardown test
-         }
-         m_timer.stop();
-         end_output(a_ostream);
-      }
+      void do_tests(std::ostream& a_ostream = std::cout);
       
       /**
        * Execute assertion
@@ -132,7 +75,7 @@ class test_suite
       void execute_assertion(assertion<Ts...>&& asrt)
       {
          // Do some accounting
-         m_assertions += 1;
+         _counter._num_assertions += 1;
          
          // Perform assertion
          if(!asrt.execute())
@@ -151,7 +94,121 @@ class test_suite
 };
 
 using suite = test_suite;
+ 
+} /* namespace cutee */
+
+#include "asserter.hpp"
+
+namespace cutee 
+{
+
+/**
+ *
+ **/
+void test_suite::header_to_stream(std::ostream& a_ostream)
+{
+   // output header
+   a_ostream << _formater->bold_on();
+   a_ostream << "======================================================================\n"
+             << "   NAME: " << this->_name << "\n"
+             << "----------------------------------------------------------------------\n"
+             << "   TESTS TO BE RUN: " << unit_test_holder::test_size() << "\n";
+
+   // output tests that should be run
+   for(decltype(unit_test_holder::test_size()) i = 0; i < unit_test_holder::test_size(); ++i)
+      a_ostream << "      " << this->get_test(i)->name() << "\n";
+}
+ 
+/**
+ *
+ **/
+void test_suite::statistics_to_stream(std::ostream& a_ostream)
+{
+   a_ostream << "----------------------------------------------------------------------\n"
+             << "   STATISTICS:\n"
+             << "      Finished tests in " << _timer.tot_clocks_per_sec()  << "s, "
+             << _counter._num_tests     /_timer.tot_clocks_per_sec()       << " tests/s, "
+             << _counter._num_assertions/_timer.tot_clocks_per_sec()       << " assertions/s \n"
+             << "      " 
+             << _counter._num_tests       << " tests, "
+             << _counter._num_assertions  << " assertions, "
+             << _counter._num_failed      << " failed\n";
+}
+
+/**
+ *
+ **/
+void test_suite::footer_to_stream(std::ostream& a_ostream)
+{
+   a_ostream << "----------------------------------------------------------------------\n"
+             << (_counter._num_failed ? _formater->warning_color() : _formater->file_color())
+             << (_counter._num_failed ? "   UNIT TEST FAILED!\n" : "   SUCCESS\n")
+             << _formater->default_color()
+             << "======================================================================\n" << std::flush;
+   a_ostream << _formater->bold_off();
+}
+
+/**
+ *
+ **/
+void test_suite::do_tests(std::ostream& a_ostream)
+{ 
+   asserter::__set_suite_ptr(this);
+   this->header_to_stream(a_ostream);
+   bool first = true;
+
+   _timer.start();
+   
+   // Run tests
+   for(decltype(test_size()) i=0; i<test_size(); ++i)
+   {
+      // Setup
+      get_test(i)->setup();
+
+      // Run
+      try
+      {
+         get_test(i)->do_test();
+      }
+      catch(const exception::failed& e)
+      {
+         this->failed_to_stream(a_ostream, get_test(i)->name(), e.what(), first);
+         _counter._num_failed += 1;
+      }
+      catch(const std::exception& e)
+      {
+         std::string message = "   std::exception \n";
+         message += e.what();
+         message += "\n";
+         this->failed_to_stream(a_ostream, get_test(i)->name(), message, first);
+         _counter._num_failed += 1;
+      }
+      catch(...)
+      {
+         this->failed_to_stream(a_ostream, get_test(i)->name(), "   cutee::suite caught \"something\"...\n", first);
+         _counter._num_failed += 1;
+      }
+
+      // Count
+      _counter._num_tests      += get_test(i)->num_test();
+      _counter._num_assertions += get_test(i)->num_assertions();
+      _counter._num_failed     += get_test(i)->num_failed(); // for test case (unit test will return 0 no matter)
+      
+      // Teardown
+      get_test(i)->teardown();
+   }
+   
+   // Stop timer
+   _timer.stop();
+   
+   // Print footer
+   this->statistics_to_stream (a_ostream);
+   this->footer_to_stream     (a_ostream);
+   
+   // Clean-up
+   asserter::__unset_suite_ptr();
+}
 
 } /* namespace cutee */
 
-#endif /* CUTEE_TEST_SUITE_H */
+#endif /* CUTEE_TEST_SUITE_HPP_INCLUDED */
