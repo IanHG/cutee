@@ -3,7 +3,6 @@
 
 #include<string>
 
-#include"test_failed.hpp"
 #include"unit_assert.hpp"
 
 namespace cutee

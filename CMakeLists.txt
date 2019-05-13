@@ -32,11 +32,9 @@ set_target_properties(cutee PROPERTIES SOVERSION 1)
 set_target_properties(cutee PROPERTIES PUBLIC_HEADER 
 "\
 include/cutee/osutil.hpp;\
-include/cutee/failed_data.hpp;\
 include/cutee/float_eq.hpp;\
 include/cutee/performance_test.hpp;\
 include/cutee/collection.hpp;\
-include/cutee/test_failed.hpp;\
 include/cutee/test_suite.hpp;\
 include/cutee/timer.hpp;\
 include/cutee/unit_assert.hpp;\

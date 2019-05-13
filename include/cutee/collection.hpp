@@ -5,7 +5,7 @@
 
 #include "unit_test.hpp"
 #include "unit_test_factory.hpp"
-#include "test_failed.hpp"
+#include "exceptions.hpp"
 
 namespace cutee
 {
@@ -50,7 +50,7 @@ class collection
             {
                get_test(i)->do_test();
             }
-            catch(test_failed &e)
+            catch(const exception::failed& e)
             {
                std::cout << "FAILED TEST: " << get_test(i)->name() << "\n"
                          << e.what() << std::endl;

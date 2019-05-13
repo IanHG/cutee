@@ -5,7 +5,6 @@
 #include<iostream>
 
 #include "unit_test.hpp"
-#include "test_failed.hpp"
 #include "timer.hpp"
 
 namespace cutee
