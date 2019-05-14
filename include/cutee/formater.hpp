@@ -1,11 +1,118 @@
 #ifndef CUTEE_FORMATER_HPP_INCLUDED
 #define CUTEE_FORMATER_HPP_INCLUDED
 
+#include <map>
+#include <string>
+#include <functional>
+#include <regex>
+
 namespace cutee
 {
 
-struct formater
+namespace detail
 {
+
+// Remove whitespace from string in-place
+static inline void remove_whitespace(std::string& s)
+{
+   s.erase
+      (  std::remove_if
+         (  s.begin()
+         ,  s.end()
+         ,  [](char &c) 
+            {
+			      return std::isspace<char>(c, std::locale::classic());
+			   }
+         )
+      ,  s.end()
+      );
+}
+
+// Remove whitespace from string copy
+static inline std::string remove_whitespace_copy(std::string s)
+{
+   remove_whitespace(s);
+   return s;
+}
+
+} /* namespace detail */
+
+/**
+ * Formater symbol replacer
+ **/
+struct symbol_replacer
+{
+   using key_t      = std::string;
+   using function_t = std::function<const char*()>;
+   using map_t      = std::map<key_t, function_t>;
+
+   map_t       _map;
+   bool        _remove_whitespace{true};
+   std::regex  _regex            {"\\[/(.*?)\\]"};
+
+   std::string& replace_in_string(std::string& str) const
+   {
+      try 
+      {
+         std::smatch match;
+         typename map_t::const_iterator iter;
+         
+         while (std::regex_search(str, match, _regex))
+         {
+            auto key = _remove_whitespace ? detail::remove_whitespace_copy(match.str(1)) : match.str(1);
+            if(!key.empty() && (iter = _map.find(key)) != _map.end())
+            {
+               str.replace(match.prefix().second, match.suffix().first, (iter->second)());
+            }
+            else
+            {
+               str.erase(match.prefix().second, match.suffix().first);
+            }
+         }
+      } 
+      catch (std::regex_error& e) 
+      {
+         // Syntax error in the regular expression
+         std::cerr << " symbol_replacer : regex error !" << std::endl;
+         throw;
+      } 
+
+      return str;
+   }
+
+   std::string replace_in_string(std::string&& str) const
+   {
+      return replace_in_string(str);
+   }
+   
+   std::string replace_in_string_copy(std::string str) const
+   {
+      return replace_in_string(str);
+   }
+};
+
+
+/**
+ * Formater
+ **/
+struct formater
+   :  public symbol_replacer
+{
+   formater()
+      :  symbol_replacer
+         {  symbol_replacer::map_t
+            {  {"bold_on" ,      [this](){ return this->bold_on() ; } }
+            ,  {"bold_off",      [this](){ return this->bold_off(); } }
+            ,  {"default_color", [this](){ return this->default_color(); } }
+            ,  {"warning_color", [this](){ return this->warning_color(); } }
+            ,  {"file_color",    [this](){ return this->file_color(); } }
+            ,  {"type_color",    [this](){ return this->type_color(); } }
+            ,  {"name_color",    [this](){ return this->name_color(); } }
+            }
+         }
+   {
+   }
+
    virtual const char* bold_on() const = 0;
    
    virtual const char* bold_off() const = 0;

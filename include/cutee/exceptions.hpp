@@ -34,18 +34,16 @@ struct assertion_failed
    template<class... Ts>
    static std::string __construct_what
       (  const assertion<Ts...>& asrt
-      ,  const formater&         form
       )
    {
-      return message::generate(asrt, form);
+      return message::generate(asrt);
    }
    
    template<class... Ts>
    assertion_failed
       (  const assertion<Ts...>& asrt
-      ,  const formater&         form
       )
-      :  _what(__construct_what(asrt, form))
+      :  _what(__construct_what(asrt))
    {
    }
 

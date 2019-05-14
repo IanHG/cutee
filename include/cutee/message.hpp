@@ -237,15 +237,15 @@ struct message
     * Generate fancy message
     **/
    template<class... Ts>
-   static std::string __generate_message(const assertion<Ts...>& asrt, const formater& form)
+   static std::string __generate_message(const assertion<Ts...>& asrt)
    {
       std::string tab = "   ";
       std::stringstream s_str;
       s_str << std::left << std::setprecision(16) << std::scientific << std::boolalpha; 
-      s_str << tab << std::setw(short_width) << "error" << form.warning_color() << asrt._info._message << form.default_color()
+      s_str << tab << std::setw(short_width) << "error" << "[/warning_color]" << asrt._info._message << "[/default_color]"
             << "\n"
             << tab << std::setw(short_width) << "file"  
-            << form.file_color();
+            << "[/file_color]";
       if(!asrt._info._file.empty())
       {
          s_str << asrt._info._file << ":" << asrt._info._line;
@@ -254,7 +254,7 @@ struct message
       {
          s_str << "N/A";
       }
-      s_str << form.default_color()
+      s_str << "[/default_color]"
             << "\n\n";
       
 
@@ -314,7 +314,7 @@ struct message
       {
          s_str << tab   << std::setw(short_width)  << v._label 
                         << std::setw(width)        << v._value 
-                        << " "                     << "[" << form.type_color() << v._type << form.default_color() << "]\n";
+                        << " "                     << "[" << "[/type_color]" << v._type << "[/default_color]" << "]\n";
       }
       
       return s_str.str();
@@ -324,9 +324,9 @@ struct message
     * Generate message dispatcher
     **/
    template<class... Ts>
-   static std::string generate(const assertion<Ts...>& asrt, const formater& form)
+   static std::string generate(const assertion<Ts...>& asrt)
    {
-      return __generate_message(asrt, form);
+      return __generate_message(asrt);
    }
 
 };

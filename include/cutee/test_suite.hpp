@@ -56,17 +56,15 @@ class test_suite
    public:
       test_suite
          (  const std::string& name = "default_suite"
-         ,  const format&      form = format::fancy
          )
          :  unit_test_holder()
          ,  _name(name)
-         ,  _formater{format::create(form)}
       { 
       }
       
       ~test_suite() = default;
 
-      void do_tests(std::ostream& a_ostream = std::cout);
+      void do_tests(std::ostream& a_ostream = std::cout, const format& form = format::fancy);
       
       /**
        * Execute assertion
@@ -80,14 +78,14 @@ class test_suite
          // Perform assertion
          if(!asrt.execute())
          {
-            throw exception::assertion_failed(std::move(asrt), *_formater);
+            throw exception::assertion_failed(std::move(asrt));
          }
       }
 
       /*!
        * Interface for running the test suite.
        */
-      void run(std::ostream& os = std::cout)
+      void run(std::ostream& os = std::cout, const format& form = format::fancy)
       {
          this->do_tests(os);
       }
@@ -151,9 +149,13 @@ void test_suite::footer_to_stream(std::ostream& a_ostream)
 /**
  *
  **/
-void test_suite::do_tests(std::ostream& a_ostream)
+void test_suite::do_tests
+   (  std::ostream& a_ostream
+   ,  const cutee::format& form
+   )
 { 
    asserter::__set_suite_ptr(this);
+   this->_formater = format::create(form);
    this->header_to_stream(a_ostream);
    bool first = true;
 
@@ -172,7 +174,7 @@ void test_suite::do_tests(std::ostream& a_ostream)
       }
       catch(const exception::failed& e)
       {
-         this->failed_to_stream(a_ostream, get_test(i)->name(), e.what(), first);
+         this->failed_to_stream(a_ostream, get_test(i)->name(), _formater->replace_in_string(e.what()), first);
          _counter._num_failed += 1;
       }
       catch(const std::exception& e)
@@ -180,7 +182,7 @@ void test_suite::do_tests(std::ostream& a_ostream)
          std::string message = "   std::exception \n";
          message += e.what();
          message += "\n";
-         this->failed_to_stream(a_ostream, get_test(i)->name(), message, first);
+         this->failed_to_stream(a_ostream, get_test(i)->name(), _formater->replace_in_string(std::move(message)), first);
          _counter._num_failed += 1;
       }
       catch(...)
