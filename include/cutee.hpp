@@ -13,8 +13,8 @@
 #include "cutee/function.hpp"
 
 // Interface
+#include "cutee/suite.hpp"
 #include "cutee/collection.hpp"
-#include "cutee/test_suite.hpp"
 
 #include "cutee/performance_test.hpp"
 #include "cutee/macros.hpp"

@@ -13,10 +13,11 @@
 namespace cutee
 {
 
-class test_suite
+class suite
    :  public unit_test_holder
 {
-   using counter_type = unsigned int;
+   using counter_type   = unsigned int;
+   using formater_ptr_t = typename format::formater_ptr_t;
    
    template<class I>
    struct counter
@@ -29,10 +30,10 @@ class test_suite
    };
 
    private:
-      std::string                _name = "";
-      counter<counter_type>      _counter;
-      clock_timer                _timer;
-      std::unique_ptr<formater>  _formater = std::unique_ptr<formater>{ nullptr };
+      std::string             _name = "";
+      counter<counter_type>   _counter;
+      clock_timer             _timer;
+      formater_ptr_t          _formater = formater_ptr_t{ nullptr };
       
       void header_to_stream(std::ostream& a_ostream);
        
@@ -54,7 +55,7 @@ class test_suite
                      << msg;
       }
    public:
-      test_suite
+      suite
          (  const std::string& name = "default_suite"
          )
          :  unit_test_holder()
@@ -62,7 +63,7 @@ class test_suite
       { 
       }
       
-      ~test_suite() = default;
+      ~suite() = default;
 
       void do_tests(std::ostream& a_ostream = std::cout, const format& form = format::fancy);
       
@@ -91,7 +92,8 @@ class test_suite
       }
 };
 
-using suite = test_suite;
+// For backwards compatibility
+using test_suite = suite;
  
 } /* namespace cutee */
 
@@ -103,7 +105,7 @@ namespace cutee
 /**
  *
  **/
-void test_suite::header_to_stream(std::ostream& a_ostream)
+void suite::header_to_stream(std::ostream& a_ostream)
 {
    // output header
    a_ostream << _formater->bold_on();
@@ -120,7 +122,7 @@ void test_suite::header_to_stream(std::ostream& a_ostream)
 /**
  *
  **/
-void test_suite::statistics_to_stream(std::ostream& a_ostream)
+void suite::statistics_to_stream(std::ostream& a_ostream)
 {
    a_ostream << "----------------------------------------------------------------------\n"
              << "   STATISTICS:\n"
@@ -136,7 +138,7 @@ void test_suite::statistics_to_stream(std::ostream& a_ostream)
 /**
  *
  **/
-void test_suite::footer_to_stream(std::ostream& a_ostream)
+void suite::footer_to_stream(std::ostream& a_ostream)
 {
    a_ostream << "----------------------------------------------------------------------\n"
              << (_counter._num_failed ? _formater->warning_color() : _formater->file_color())
@@ -149,7 +151,7 @@ void test_suite::footer_to_stream(std::ostream& a_ostream)
 /**
  *
  **/
-void test_suite::do_tests
+void suite::do_tests
    (  std::ostream& a_ostream
    ,  const cutee::format& form
    )

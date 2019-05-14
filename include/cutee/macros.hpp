@@ -1,4 +1,4 @@
-#include "test_suite.hpp"
+#include "suite.hpp"
 
 /**
  * Assertion Macros

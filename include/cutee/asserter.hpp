@@ -5,8 +5,6 @@
 #include <functional>
 #include <cassert>
 
-//#include "test_suite.hpp"
-
 namespace cutee
 {
 

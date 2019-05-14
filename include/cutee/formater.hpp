@@ -203,17 +203,19 @@ struct format
 {
    enum value : int { fancy, raw };
 
-   static std::unique_ptr<formater> create(const format& form)
+   using formater_ptr_t = std::unique_ptr<formater>;
+
+   static formater_ptr_t create(const format& form)
    {
       switch(form._value)
       {
          case fancy:
-            return std::unique_ptr<formater>{ new fancy_formater{} };
+            return formater_ptr_t{ new fancy_formater{} };
          case raw:
-            return std::unique_ptr<formater>{ new raw_formater{} };
+            return formater_ptr_t{ new raw_formater{} };
       }
 
-      return std::unique_ptr<formater>{nullptr};
+      return formater_ptr_t{nullptr};
    }
 
    constexpr format(value v) : _value(v) 

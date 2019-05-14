@@ -33,15 +33,15 @@ set_target_properties(cutee PROPERTIES PUBLIC_HEADER
 "\
 include/cutee/osutil.hpp;\
 include/cutee/function.hpp;\
+include/cutee/asserter.hpp\
 include/cutee/float_eq.hpp;\
-include/cutee/performance_test.hpp;\
+include/cutee/suite.hpp;\
 include/cutee/collection.hpp;\
-include/cutee/test_suite.hpp;\
 include/cutee/timer.hpp;\
+include/cutee/performance_test.hpp;\
 include/cutee/unit_assert.hpp;\
 include/cutee/unit_test_factory.hpp;\
 include/cutee/unit_test.hpp\
-include/cutee/asserter.hpp\
 ")
 
 # Add static library 
