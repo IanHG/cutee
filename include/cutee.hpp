@@ -5,7 +5,6 @@
 #include "cutee/osutil.hpp"
 #endif /* CUTEE_OSTREAM_UTILITY */
 
-//#include "cutee/asserter.hpp"
 // Utility
 #include "cutee/exceptions.hpp"
 #include "cutee/timer.hpp"

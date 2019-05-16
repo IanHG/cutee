@@ -31,17 +31,22 @@ set_target_properties(cutee PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(cutee PROPERTIES SOVERSION 1)
 set_target_properties(cutee PROPERTIES PUBLIC_HEADER 
 "\
-include/cutee/osutil.hpp;\
-include/cutee/function.hpp;\
 include/cutee/asserter.hpp\
-include/cutee/float_eq.hpp;\
-include/cutee/suite.hpp;\
+include/cutee/assertion.hpp\
 include/cutee/collection.hpp;\
-include/cutee/timer.hpp;\
+include/cutee/container.hpp;\
+include/cutee/exceptions.hpp;\
+include/cutee/float_eq.hpp;\
+include/cutee/formater.hpp;\
+include/cutee/function.hpp;\
+include/cutee/macros.hpp;\
+include/cutee/message.hpp;\
+include/cutee/meta.hpp;\
+include/cutee/osutil.hpp;\
 include/cutee/performance_test.hpp;\
-include/cutee/unit_assert.hpp;\
-include/cutee/unit_test_factory.hpp;\
-include/cutee/unit_test.hpp\
+include/cutee/suite.hpp;\
+include/cutee/test.hpp;\
+include/cutee/timer.hpp;\
 ")
 
 # Add static library 
