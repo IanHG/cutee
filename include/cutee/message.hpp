@@ -115,9 +115,16 @@ struct has_distance
    >
    :  public std::true_type
 {
-   constexpr static auto calculate_distance(const T& lhs, const U& rhs)
+   constexpr static auto calculate_distance(const T& lhs, const U& rhs, const assertion_type& type)
    {
-      return numeric::float_ulps(lhs, rhs);
+      if(type != assertion_type::comp_zero)
+      {
+         return numeric::float_ulps(lhs, rhs);
+      }
+      else
+      {
+         return numeric::float_ulps(lhs, lhs + rhs);
+      }
    }
 };
 
@@ -135,10 +142,17 @@ struct has_distance
    >
    :  public std::true_type
 {
-   constexpr static auto calculate_distance(const T& lhs, const U& rhs)
+   constexpr static auto calculate_distance(const T& lhs, const U& rhs, const assertion_type& type)
    {
       using base_type = decltype(numeric::float_ulps(lhs.real(), rhs.real()));
-      return std::complex<base_type>(numeric::float_ulps(lhs.real(), rhs.real()), numeric::float_ulps(lhs.imag(), rhs.imag()));
+      if(type != assertion_type::comp_zero)
+      {
+         return std::complex<base_type>(numeric::float_ulps(lhs.real(), rhs.real()), numeric::float_ulps(lhs.imag(), rhs.imag()));
+      }
+      else
+      {
+         return std::complex<base_type>(numeric::float_ulps(lhs.real(), lhs.real() + rhs.real()), numeric::float_ulps(lhs.imag(), lhs.imag() + rhs.imag()));
+      }
    }
 };
 
@@ -156,7 +170,7 @@ struct has_distance
    >
    :  public std::true_type
 {
-   constexpr static auto calculate_distance(const T& lhs, const U& rhs)
+   constexpr static auto calculate_distance(const T& lhs, const U& rhs, const assertion_type& type)
    {
       using base_type = decltype(numeric::float_ulps(lhs[0], rhs[0]));
       std::vector<base_type> ulps;
@@ -164,7 +178,14 @@ struct has_distance
       ulps.resize(ulps_size);
       for(int i = 0; i < int(ulps_size); ++i)
       {
-         ulps[i] = numeric::float_ulps(lhs[i], rhs[i]);
+         if(type != assertion_type::comp_zero)
+         {
+            ulps[i] = numeric::float_ulps(lhs[i], rhs[i]);
+         }
+         else
+         {
+            ulps[i] = numeric::float_ulps(lhs[i], lhs[i] + rhs[i]);
+         }
       }
       return ulps;
    }
@@ -208,7 +229,7 @@ std::string type_string(const V& v)
 struct message
 {
    enum format : int { fancy, raw };
-   static const int short_width = 10;
+   static const int short_width = 13;
    
    struct variable_triad
    {
@@ -254,7 +275,7 @@ struct message
       if constexpr(sizeof...(Ts) == 1)
       {
          variable_vec.emplace_back
-            (  std::string{"value"}
+            (  std::string{"value"} + std::string{(asrt._info._type == assertion_type::not_equal ? " not" : "")}
             ,  detail::value_string(std::get<0>(asrt._args))
             ,  detail::type_string (std::get<0>(asrt._args))
             );
@@ -263,12 +284,18 @@ struct message
       if constexpr(sizeof...(Ts) >= 2)
       {
          variable_vec.emplace_back
-            (  std::string{"expected"}
+            (  (  asrt._info._type != assertion_type::comp_zero 
+               ?  std::string{"expected"} + std::string{(asrt._info._type == assertion_type::not_equal ? " not" : "")}
+               :  std::string{"compare"}
+               )
             ,  detail::value_string(std::get<1>(asrt._args))
             ,  detail::type_string (std::get<1>(asrt._args))
             );
          variable_vec.emplace_back
-            (  std::string{"got"}
+            (  (  asrt._info._type != assertion_type::comp_zero
+               ?  std::string{"got"}
+               :  std::string{"zero"}
+               )
             ,  detail::value_string(std::get<0>(asrt._args))
             ,  detail::type_string (std::get<0>(asrt._args))
             );
@@ -279,7 +306,7 @@ struct message
          using distance = detail::has_distance<decltype(std::get<1>(asrt._args)), decltype(std::get<0>(asrt._args))>;
          if constexpr (distance::value)
          {
-            auto dist = distance::calculate_distance(std::get<1>(asrt._args), std::get<0>(asrt._args));
+            auto dist = distance::calculate_distance(std::get<1>(asrt._args), std::get<0>(asrt._args), asrt._info._type);
             
             variable_vec.emplace_back
                (  std::string{"precision"}

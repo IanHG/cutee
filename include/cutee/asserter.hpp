@@ -49,6 +49,24 @@ struct asserter
          
          );
    }
+   
+   /* Assert not */
+   template<class T>
+   static void assert_not(T&& t, info&& i)
+   {
+      __assert_suite_ptr();
+      i._type = assertion_type::not_equal;
+      _suite_ptr->execute_assertion
+         (  assertion<T>{
+               [](T&& lhs){
+                  return !bool(lhs);
+               }
+               ,  std::forward_as_tuple(std::forward<T>(t))
+               ,  std::move(i)
+            }
+         
+         );
+   }
 
    /* Assert equal */
    template<class T, class U>
@@ -67,22 +85,23 @@ struct asserter
          );
    }
    
-   ///* Assert float equal with precision */
-   //template<class T, class U>
-   //static void assert_not_equal(T&& t, U&& u, info&& i)
-   //{
-   //   __assert_suite_ptr();
-   //   _suite_ptr->execute_assertion
-   //      (  assertion<T, U>{
-   //            [](T&& lhs, U&& rhs){
-   //               return (lhs != rhs);
-   //            }
-   //            ,  std::forward_as_tuple(std::forward<T>(t), std::forward<U>(u))
-   //            ,  std::move(i)
-   //         }
-   //      
-   //      );
-   //}
+   /* Assert float equal with precision */
+   template<class T, class U>
+   static void assert_not_equal(T&& t, U&& u, info&& i)
+   {
+      __assert_suite_ptr();
+      i._type = assertion_type::not_equal;
+      _suite_ptr->execute_assertion
+         (  assertion<T, U>{
+               [](T&& lhs, U&& rhs){
+                  return (lhs != rhs);
+               }
+               ,  std::forward_as_tuple(std::forward<T>(t), std::forward<U>(u))
+               ,  std::move(i)
+            }
+         
+         );
+   }
 
    /* Assert float equal with precision */
    template<class T, class U, class I>
@@ -106,6 +125,7 @@ struct asserter
    static void assert_float_numeq_zero_prec(T&& t, U&& u, I&& ulps, info&& i)
    {
       __assert_suite_ptr();
+      i._type = assertion_type::comp_zero;
       _suite_ptr->execute_assertion
          (  assertion<T, U, I>{
                [](T&& lhs, U&& rhs, I&& ulps){
