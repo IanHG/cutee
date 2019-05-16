@@ -50,7 +50,7 @@ struct asserter
          );
    }
 
-   /* Assert float equal with precision */
+   /* Assert equal */
    template<class T, class U>
    static void assert_equal(T&& t, U&& u, info&& i)
    {
@@ -66,6 +66,23 @@ struct asserter
          
          );
    }
+   
+   ///* Assert float equal with precision */
+   //template<class T, class U>
+   //static void assert_not_equal(T&& t, U&& u, info&& i)
+   //{
+   //   __assert_suite_ptr();
+   //   _suite_ptr->execute_assertion
+   //      (  assertion<T, U>{
+   //            [](T&& lhs, U&& rhs){
+   //               return (lhs != rhs);
+   //            }
+   //            ,  std::forward_as_tuple(std::forward<T>(t), std::forward<U>(u))
+   //            ,  std::move(i)
+   //         }
+   //      
+   //      );
+   //}
 
    /* Assert float equal with precision */
    template<class T, class U, class I>
@@ -76,6 +93,23 @@ struct asserter
          (  assertion<T, U, I>{
                [](T&& lhs, U&& rhs, I&& ulps){
                   return cutee::numeric::float_eq(lhs, rhs, ulps);
+               }
+               ,  std::forward_as_tuple(std::forward<T>(t), std::forward<U>(u), std::forward<I>(ulps))
+               ,  std::move(i)
+            }
+         
+         );
+   }
+   
+   /* Assert float equal to zero in comparisson with number with precision */
+   template<class T, class U, class I>
+   static void assert_float_numeq_zero_prec(T&& t, U&& u, I&& ulps, info&& i)
+   {
+      __assert_suite_ptr();
+      _suite_ptr->execute_assertion
+         (  assertion<T, U, I>{
+               [](T&& lhs, U&& rhs, I&& ulps){
+                  return cutee::numeric::float_numeq_zero(lhs, rhs, ulps);
                }
                ,  std::forward_as_tuple(std::forward<T>(t), std::forward<U>(u), std::forward<I>(ulps))
                ,  std::move(i)

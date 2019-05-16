@@ -16,7 +16,6 @@
 namespace cutee
 {
 
-
 namespace detail
 {
 #ifdef __clang__ 
@@ -52,14 +51,6 @@ PRAGMA_POP
 #undef PRAGMA_PUSH
 #undef PRAGMA_POP
 
-/**
- * Get demangled type as string
- **/
-template<class T>
-std::string type_of()
-{
-   return demangle(typeid(T).name());
-}
 
 template<class T>
 struct is_complex

@@ -87,6 +87,10 @@ struct has_##NAME<C, Ret(Args...)> \
    public: \
       static constexpr bool value = type::value; \
 }; \
+\
+template<class C, class F>\
+constexpr bool has_##NAME##_v = has_##NAME<C, F>::value;\
+\
 PRAGMA_POP
 
 CREATE_MEMBER_FUNCTION_CHECKER(begin)
@@ -113,8 +117,17 @@ struct exists_operator_output_utilp
 };
 PRAGMA_POP
 
-#undef PRAGMA_PUSH
-#undef PRAGMA_POP
+//#undef PRAGMA_PUSH
+//#undef PRAGMA_POP
+
+/**
+ * Get demangled type as string
+ **/
+template<class T>
+std::string type_of()
+{
+   return demangle(typeid(T).name());
+}
 
 } /* namespace detail */ 
 

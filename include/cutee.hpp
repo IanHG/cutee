@@ -13,13 +13,12 @@
 #include "cutee/function.hpp"
 
 // Interface
-#include "cutee/suite.hpp"
+#include "cutee/macros.hpp"
+#include "cutee/test.hpp"
+#include "cutee/container.hpp"
 #include "cutee/collection.hpp"
+#include "cutee/suite.hpp"
 
 #include "cutee/performance_test.hpp"
-#include "cutee/macros.hpp"
-#include "cutee/unit_assert.hpp"
-#include "cutee/unit_test_factory.hpp"
-#include "cutee/unit_test.hpp"
 
 #endif /* CUTEE_HPP_INCLUDED */

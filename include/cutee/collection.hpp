@@ -3,16 +3,17 @@
 
 #include <iostream>
 
-#include "unit_test.hpp"
-#include "unit_test_factory.hpp"
+#include "test.hpp"
 #include "exceptions.hpp"
+
+#include "container.hpp"
 
 namespace cutee
 {
 
 class collection
-   :  virtual protected unit_test_holder
-   ,  virtual public    unit_test
+   :  virtual protected container
+   ,  virtual public    test
 {
    private:
       unsigned m_num_test;
@@ -27,8 +28,9 @@ class collection
       //
       //
       //
-      collection(): 
-         unit_test_holder(), unit_test(), m_num_test(0), m_failed(0)
+      collection()
+         :  m_num_test(0)
+         ,  m_failed(0)
       { 
       }
       
@@ -48,7 +50,7 @@ class collection
          {
             try
             {
-               get_test(i)->do_test();
+               get_test(i)->run();
             }
             catch(const exception::failed& e)
             {
@@ -58,8 +60,8 @@ class collection
                //throw;
             }
             
-            incr_num_assertions(get_test(i)->num_assertions());
-            incr_num_test(get_test(i)->num_test());
+            //incr_num_assertions(get_test(i)->num_assertions());
+            //incr_num_test(get_test(i)->num_test());
          }
       }
       

@@ -3,8 +3,8 @@
 
 #include <iostream>
 
-#include "unit_test.hpp"
-#include "unit_test_factory.hpp"
+#include "test.hpp"
+#include "container.hpp"
 
 #include "timer.hpp"
 #include "exceptions.hpp"
@@ -14,7 +14,7 @@ namespace cutee
 {
 
 class suite
-   :  public unit_test_holder
+   :  public container
 {
    using counter_type   = unsigned int;
    using formater_ptr_t = typename format::formater_ptr_t;
@@ -54,18 +54,6 @@ class suite
                      << _formater->name_color() << "   *** " << name << " ***\n" << _formater->default_color()
                      << msg;
       }
-   public:
-      suite
-         (  const std::string& name = "default_suite"
-         )
-         :  unit_test_holder()
-         ,  _name(name)
-      { 
-      }
-      
-      ~suite() = default;
-
-      void do_tests(std::ostream& a_ostream = std::cout, const format& form = format::fancy);
       
       /**
        * Execute assertion
@@ -82,6 +70,24 @@ class suite
             throw exception::assertion_failed(std::move(asrt));
          }
       }
+
+      friend class asserter;
+
+   public:
+      suite
+         (  const std::string& name = "default_suite"
+         )
+         :  _name(name)
+      { 
+      }
+      
+      ~suite() = default;
+      
+      /*!
+       * Old interface for running the test suite.
+       */
+      void do_tests(std::ostream& a_ostream = std::cout, const format& form = format::fancy);
+      
 
       /*!
        * Interface for running the test suite.
@@ -112,10 +118,10 @@ void suite::header_to_stream(std::ostream& a_ostream)
    a_ostream << "======================================================================\n"
              << "   NAME: " << _formater->name_color() << this->_name << _formater->default_color() << "\n"
              << "----------------------------------------------------------------------\n"
-             << "   TESTS TO BE RUN: " << unit_test_holder::test_size() << "\n";
+             << "   TESTS TO BE RUN: " << this->test_size() << "\n";
 
    // output tests that should be run
-   for(decltype(unit_test_holder::test_size()) i = 0; i < unit_test_holder::test_size(); ++i)
+   for(decltype(this->test_size()) i = 0; i < this->test_size(); ++i)
       a_ostream << "      " << this->get_test(i)->name() << "\n";
 }
  
@@ -172,7 +178,7 @@ void suite::do_tests
       // Run
       try
       {
-         get_test(i)->do_test();
+         get_test(i)->run();
       }
       catch(const exception::failed& e)
       {
@@ -194,9 +200,10 @@ void suite::do_tests
       }
 
       // Count
-      _counter._num_tests      += get_test(i)->num_test();
-      _counter._num_assertions += get_test(i)->num_assertions();
-      _counter._num_failed     += get_test(i)->num_failed(); // for test case (unit test will return 0 no matter)
+      //_counter._num_tests      += get_test(i)->num_test();
+      _counter._num_tests      += 1;
+      //_counter._num_assertions += get_test(i)->num_assertions();
+      //_counter._num_failed     += get_test(i)->num_failed(); // for test case (unit test will return 0 no matter)
       
       // Teardown
       get_test(i)->teardown();
