@@ -106,15 +106,14 @@ class suite
       /*!
        * Old interface for running the test suite.
        */
-      void do_tests(std::ostream& a_ostream = std::cout, const format& form = format::fancy);
-      
+      void do_tests(std::ostream& os = std::cout, const format& form = format::fancy);
 
       /*!
        * Interface for running the test suite.
        */
       void run(std::ostream& os = std::cout, const format& form = format::fancy)
       {
-         this->do_tests(os);
+         this->do_tests(os, form);
       }
 };
 
@@ -230,7 +229,7 @@ void suite::do_tests
    (  std::ostream&        os
    ,  const cutee::format& form
    )
-{ 
+{
    asserter::__set_suite_ptr(this);
    this->_first  = true;
    this->_writer = writer_ptr_t{new formated_writer{os, format::create(form)}};
