@@ -1,3 +1,4 @@
+#pragma once
 #ifndef LIBMDA_TESTING_TIMER_H
 #define LIBMDA_TESTING_TIMER_H
 

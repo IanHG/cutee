@@ -1,10 +1,10 @@
+#pragma once
 #ifndef CUTEE_EXCEPTIONS_HPP_INCLUDED
 #define CUTEE_EXCEPTIONS_HPP_INCLUDED
 
 #include <string>
 
 #include "assertion.hpp"
-#include "formater.hpp"
 #include "message.hpp"
 
 namespace cutee

@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CUTEE_FUNCTION_HPP_INCLUDED
 #define CUTEE_FUNCTION_HPP_INCLUDED
 
@@ -6,7 +7,6 @@
 #include <tuple>
 
 #include "meta.hpp"
-//#include "unit_test.hpp"
 
 namespace cutee
 {
@@ -53,17 +53,14 @@ using __function_return_t = typename __function_return<Ts...>::type;
 //
 void unit_assert_fcn(bool, const std::string&, const char*, int);
 
-//template<class F, class S, class... Args>
 template<class S, class F, class... Args>
 struct __function_wrap
-   //:  public cutee::test
 {
    private:
    F                   _fcn;
    std::tuple<Args...> _args;
    
    public:
-   //__function_wrap(F&& fcn, S&& msg, Args&&... args)
    __function_wrap(F&& fcn, Args&&... args)
       :  _fcn (std::forward<F>(fcn))
       ,  _args(std::forward_as_tuple(args...))
@@ -95,11 +92,6 @@ struct __function_wrap
    void run() 
    {
       call_func(std::index_sequence_for<Args...>{});
-   }
-
-   std::string name() const 
-   { 
-      return std::string{"__function_wrap"}; 
    }
 };
 

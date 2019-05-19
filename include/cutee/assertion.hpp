@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CUTEE_ASSERTION_HPP_INCLUDED
 #define CUTEE_ASSERTION_HPP_INCLUDED
 

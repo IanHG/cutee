@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CUTEE_MESSAGE_H_INCLUDED
 #define CUTEE_MESSAGE_H_INCLUDED
 
@@ -331,8 +332,8 @@ struct message
       for(const auto& v : variable_vec)
       {
          s_str << tab   << std::setw(short_width)  << v._label 
-                        << std::setw(width)        << v._value 
-                        << " "                     << "[" << "[/type_color]" << v._type << "[/default_color]" << "]\n";
+                        << "[/value_color]"        << std::setw(width)        << v._value << "[/default_color]"
+                        << " "                     << "[" << "[/type_color]"  << v._type  << "[/default_color]" << "]\n";
       }
       
       return s_str.str();

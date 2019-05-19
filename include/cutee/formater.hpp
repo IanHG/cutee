@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CUTEE_FORMATER_HPP_INCLUDED
 #define CUTEE_FORMATER_HPP_INCLUDED
 
@@ -108,6 +109,7 @@ struct formater
             ,  {"file_color",    [this](){ return this->file_color(); } }
             ,  {"type_color",    [this](){ return this->type_color(); } }
             ,  {"name_color",    [this](){ return this->name_color(); } }
+            ,  {"value_color",   [this](){ return this->value_color(); } }
             }
          }
    {
@@ -126,6 +128,8 @@ struct formater
    virtual const char* type_color() const = 0;
    
    virtual const char* name_color() const = 0;
+   
+   virtual const char* value_color() const = 0;
 };
 
 template<class T>
@@ -171,6 +175,11 @@ struct formater_middleware
    {
       return self()._name_color;
    }
+   
+   const char* value_color() const
+   {
+      return self()._value_color;
+   }
 };
 
 struct fancy_formater
@@ -184,6 +193,7 @@ struct fancy_formater
    const char _type_color   [8] = "\e[32m\0";
    const char _file_color   [8] = "\e[33m\0";
    const char _name_color   [8] = "\e[34m\0";
+   const char _value_color  [2] = "\0";
 };
 
 struct raw_formater
@@ -197,6 +207,7 @@ struct raw_formater
    const char _type_color   [2] = "\0";
    const char _file_color   [2] = "\0";
    const char _name_color   [2] = "\0";
+   const char _value_color  [2] = "\0";
 };
 
 struct format

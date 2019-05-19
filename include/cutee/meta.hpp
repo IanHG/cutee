@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CUTEE_META_HPP_INCLUDED
 #define CUTEE_META_HPP_INCLUDED
 

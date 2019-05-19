@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CUTEE_UNIT_TEST_H
 #define CUTEE_UNIT_TEST_H
 
@@ -42,6 +43,7 @@ inline test::~test()
 CREATE_MEMBER_FUNCTION_CHECKER(run)
 CREATE_MEMBER_FUNCTION_CHECKER(setup)
 CREATE_MEMBER_FUNCTION_CHECKER(teardown)
+CREATE_MEMBER_FUNCTION_CHECKER(name)
 
 struct empty
 {
@@ -94,7 +96,14 @@ struct test_impl
       // interface function for getting name of test
       std::string name() const override
       {
-         return _name;
+         if constexpr(has_name_v<T, std::string()>)
+         {
+            return _name + T::name();
+         }
+         else
+         {
+            return _name;
+         }
       }
 };
 

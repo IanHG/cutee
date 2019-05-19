@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CUTEE_TEST_SUITE_HPP_INCLUDED
 #define CUTEE_TEST_SUITE_HPP_INCLUDED
 
@@ -13,11 +14,24 @@
 namespace cutee
 {
 
+struct formated_writer
+{
+   using formater_ptr_t = typename format::formater_ptr_t;
+   
+   std::ostream&  _os         = std::cout;
+   formater_ptr_t _formater   = formater_ptr_t{nullptr};
+
+   void write(const std::string& msg) const
+   {
+      _os << this->_formater->replace_in_string_copy(msg);
+   }
+};
+
 class suite
    :  public container
 {
-   using counter_type   = unsigned int;
-   using formater_ptr_t = typename format::formater_ptr_t;
+   using counter_type = unsigned int;
+   using writer_ptr_t = std::unique_ptr<formated_writer>; 
    
    template<class I>
    struct counter
@@ -30,29 +44,32 @@ class suite
    };
 
    private:
-      std::string             _name = "";
-      counter<counter_type>   _counter;
-      clock_timer             _timer;
-      formater_ptr_t          _formater = formater_ptr_t{ nullptr };
+      std::string            _name = "";
+      counter<counter_type>  _counter;
+      clock_timer            _timer;
+      bool                   _first  = false;
+      writer_ptr_t           _writer = writer_ptr_t{ nullptr };
       
-      void header_to_stream(std::ostream& a_ostream);
+      /* Create message strings */
+      std::string create_header_message()       const;
+      std::string create_statistics_message()   const;
+      std::string create_footer_message()       const;
        
-      void statistics_to_stream(std::ostream& a_ostream);
-
-      void footer_to_stream(std::ostream& a_ostream);
-       
-      void failed_to_stream(std::ostream& a_ostream, const std::string& name, const std::string& msg, bool& first)
+      std::string create_failed_message(const std::string& name, const std::string& msg)
       {
-         if(first)
+         std::stringstream sstr;
+         if(this->_first)
          {
-            a_ostream << "----------------------------------------------------------------------\n"
-                      << "   FAILED TESTS:\n";
-            first = false;
+            sstr << "----------------------------------------------------------------------\n"
+                 << "   FAILED TESTS:\n";
+            this->_first = false;
          }
 
-         a_ostream   << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
-                     << _formater->name_color() << "   *** " << name << " ***\n" << _formater->default_color()
-                     << msg;
+         sstr   << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+                << "[/name_color]"<< "   *** " << name << " ***\n" << "[/default_color]"
+                << msg;
+
+         return sstr.str();
       }
       
       /**
@@ -72,6 +89,9 @@ class suite
       }
 
       friend class asserter;
+      friend class collection;
+
+      void run_test(test&);
 
    public:
       suite
@@ -111,113 +131,130 @@ namespace cutee
 /**
  *
  **/
-void suite::header_to_stream(std::ostream& a_ostream)
+std::string suite::create_header_message() const
 {
+   std::stringstream sstr;
    // output header
-   a_ostream << _formater->bold_on();
-   a_ostream << "======================================================================\n"
-             << "   NAME: " << _formater->name_color() << this->_name << _formater->default_color() << "\n"
-             << "----------------------------------------------------------------------\n"
-             << "   TESTS TO BE RUN: " << this->test_size() << "\n";
+   sstr  << "[/bold_on]"
+         << "======================================================================\n"
+         << "   NAME: " << "[/name_color]" << this->_name << "[/default_color]" << "\n"
+         << "----------------------------------------------------------------------\n"
+         << "   TESTS TO BE RUN: " << this->test_size() << "\n";
 
    // output tests that should be run
    for(decltype(this->test_size()) i = 0; i < this->test_size(); ++i)
-      a_ostream << "      " << this->get_test(i)->name() << "\n";
+   {
+      sstr << "      " << const_cast<suite*>(this)->get_test(i)->name() << "\n";
+   }
+
+   return sstr.str();
 }
  
 /**
  *
  **/
-void suite::statistics_to_stream(std::ostream& a_ostream)
+std::string suite::create_statistics_message() const
 {
-   a_ostream << "----------------------------------------------------------------------\n"
-             << "   STATISTICS:\n"
-             << "      Finished tests in " << _timer.tot_clocks_per_sec()  << "s, "
-             << _counter._num_tests     /_timer.tot_clocks_per_sec()       << " tests/s, "
-             << _counter._num_assertions/_timer.tot_clocks_per_sec()       << " assertions/s \n"
-             << "      " 
-             << _counter._num_tests       << " tests, "
-             << _counter._num_assertions  << " assertions, "
-             << _counter._num_failed      << " failed\n";
+   std::stringstream sstr;
+   sstr << "----------------------------------------------------------------------\n"
+        << "   STATISTICS:\n"
+        << "      Finished tests in " << _timer.tot_clocks_per_sec()  << "s, "
+        << _counter._num_tests     /_timer.tot_clocks_per_sec()       << " tests/s, "
+        << _counter._num_assertions/_timer.tot_clocks_per_sec()       << " assertions/s \n"
+        << "      " 
+        << _counter._num_tests       << " tests, "
+        << _counter._num_assertions  << " assertions, "
+        << _counter._num_failed      << " failed\n";
+   return sstr.str();
 }
 
 /**
  *
  **/
-void suite::footer_to_stream(std::ostream& a_ostream)
+std::string suite::create_footer_message() const
 {
-   a_ostream << "----------------------------------------------------------------------\n"
-             << (_counter._num_failed ? _formater->warning_color() : _formater->file_color())
-             << (_counter._num_failed ? "   UNIT TEST FAILED!\n" : "   SUCCESS\n")
-             << _formater->default_color()
-             << "======================================================================\n" << std::flush;
-   a_ostream << _formater->bold_off();
+   std::stringstream sstr;
+   sstr << "----------------------------------------------------------------------\n"
+        << (_counter._num_failed ? "[/warning_color]" : "[/file_color]")
+        << (_counter._num_failed ? "   UNIT TEST FAILED!\n" : "   SUCCESS\n")
+        << "[/default_color]"
+        << "======================================================================\n"
+        << "[/bold_off]";
+   return sstr.str();
 }
+
+/**
+ *
+ **/
+void suite::run_test(test& t)
+{
+   // Setup
+   t.setup();
+
+   // Run
+   try
+   {
+      t.run();
+   }
+   catch(const exception::failed& e)
+   {
+      this->_writer->write(this->create_failed_message(t.name(), e.what()));
+      _counter._num_failed += 1;
+   }
+   catch(const std::exception& e)
+   {
+      std::string message = "   std::exception \n";
+      message += e.what();
+      message += "\n";
+      this->_writer->write(this->create_failed_message(t.name(), std::move(message)));
+      _counter._num_failed += 1;
+   }
+   catch(...)
+   {
+      this->_writer->write(this->create_failed_message(t.name(), "   cutee::suite caught \"something\"...\n"));
+      _counter._num_failed += 1;
+   }
+
+   // Count
+   _counter._num_tests += 1;
+   
+   // Teardown
+   t.teardown();
+}
+
 
 /**
  *
  **/
 void suite::do_tests
-   (  std::ostream& a_ostream
+   (  std::ostream&        os
    ,  const cutee::format& form
    )
 { 
    asserter::__set_suite_ptr(this);
-   this->_formater = format::create(form);
-   this->header_to_stream(a_ostream);
-   bool first = true;
-
+   this->_first  = true;
+   this->_writer = writer_ptr_t{new formated_writer{os, format::create(form)}};
+   this->_writer->write(this->create_header_message());
+   
+   // Start timer
    _timer.start();
    
    // Run tests
    for(decltype(test_size()) i=0; i<test_size(); ++i)
    {
-      // Setup
-      get_test(i)->setup();
-
-      // Run
-      try
-      {
-         get_test(i)->run();
-      }
-      catch(const exception::failed& e)
-      {
-         this->failed_to_stream(a_ostream, get_test(i)->name(), _formater->replace_in_string(e.what()), first);
-         _counter._num_failed += 1;
-      }
-      catch(const std::exception& e)
-      {
-         std::string message = "   std::exception \n";
-         message += e.what();
-         message += "\n";
-         this->failed_to_stream(a_ostream, get_test(i)->name(), _formater->replace_in_string(std::move(message)), first);
-         _counter._num_failed += 1;
-      }
-      catch(...)
-      {
-         this->failed_to_stream(a_ostream, get_test(i)->name(), "   cutee::suite caught \"something\"...\n", first);
-         _counter._num_failed += 1;
-      }
-
-      // Count
-      //_counter._num_tests      += get_test(i)->num_test();
-      _counter._num_tests      += 1;
-      //_counter._num_assertions += get_test(i)->num_assertions();
-      //_counter._num_failed     += get_test(i)->num_failed(); // for test case (unit test will return 0 no matter)
-      
-      // Teardown
-      get_test(i)->teardown();
+      this->run_test(*(get_test(i)));
    }
    
    // Stop timer
    _timer.stop();
    
    // Print footer
-   this->statistics_to_stream (a_ostream);
-   this->footer_to_stream     (a_ostream);
+   this->_writer->write(this->create_statistics_message());
+   this->_writer->write(this->create_footer_message());
    
    // Clean-up
    asserter::__unset_suite_ptr();
+   this->_writer = writer_ptr_t{nullptr};
 }
 
 } /* namespace cutee */

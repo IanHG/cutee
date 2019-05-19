@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CUTEE_CONTAINER_HPP_INCLUDED
 #define CUTEE_CONTAINER_HPP_INCLUDED
 
@@ -83,7 +84,7 @@ class container
       //
       // get test number i
       //
-      test_ptr_t& get_test(int i) 
+      test_ptr_t& get_test(int i)
       { 
          return m_tests[i]; 
       }

@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CUTEE_OSUTIL_HPP_INCLUDED
 #define CUTEE_OSUTIL_HPP_INCLUDED
 

@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CUTEE_FLOAT_IS_EQUAL_H_INCLUDED
 #define CUTEE_FLOAT_IS_EQUAL_H_INCLUDED
 

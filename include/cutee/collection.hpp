@@ -1,5 +1,6 @@
-#ifndef CUTEE_TEST_CASE_H
-#define CUTEE_TEST_CASE_H
+#pragma once
+#ifndef CUTEE_COLLECTION_HPP_INCLUDED
+#define CUTEE_COLLECTION_HPP_INCLUDED
 
 #include <iostream>
 
@@ -7,6 +8,7 @@
 #include "exceptions.hpp"
 
 #include "container.hpp"
+#include "suite.hpp"
 
 namespace cutee
 {
@@ -15,73 +17,31 @@ class collection
    :  virtual protected container
    ,  virtual public    test
 {
-   private:
-      unsigned m_num_test;
-      unsigned m_failed;
-
-      void incr_num_test(const unsigned int a_num_test)
-      { 
-         m_num_test += a_num_test; 
-      }
-
    public:
-      //
-      //
-      //
-      collection()
-         :  m_num_test(0)
-         ,  m_failed(0)
-      { 
-      }
+      collection()            = default;
+      virtual ~collection()   = default;
       
-      //
-      //
-      //
-      virtual ~collection() 
-      { 
-      }
-      
-      //
-      //
-      //
+      // Run the collection
       void run()
       {
          for(decltype(test_size()) i=0; i<test_size(); ++i)
          {
-            try
-            {
-               get_test(i)->run();
-            }
-            catch(const exception::failed& e)
-            {
-               std::cout << "FAILED TEST: " << get_test(i)->name() << "\n"
-                         << e.what() << std::endl;
-               ++m_failed;
-               //throw;
-            }
-            
-            //incr_num_assertions(get_test(i)->num_assertions());
-            //incr_num_test(get_test(i)->num_test());
+            asserter::_suite_ptr->run_test(*(this->get_test(i)));
          }
       }
       
-      //
-      //
-      //
-      unsigned num_test() const 
-      { 
-         return m_num_test; 
-      }
-
-      //
-      //
-      //
-      unsigned num_failed() const
+      // Get name of collection (concat all individual test names)
+      std::string name() const
       {
-         return m_failed;
+         std::stringstream sstr;
+         for(decltype(test_size()) i=0; i<test_size(); ++i)
+         {
+            sstr << "\n         " << const_cast<collection*>(this)->get_test(i)->name();
+         }
+         return sstr.str();
       }
 };
 
 } /* namespace cutee */
 
-#endif /* CUTEE_TEST_CASE_H */
+#endif /* CUTEE_COLLECTION_HPP_INCLUDED */
