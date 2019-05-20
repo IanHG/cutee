@@ -71,10 +71,10 @@ struct test_impl
          {
             T::run();
          }
-         //else if constexpr(has_do_test_v<T, void()>)
-         //{
-         //   T::do_test();
-         //}
+         else if constexpr(has_do_test_v<T, void()>)
+         {
+            T::do_test();
+         }
          else
          {
             static_assert(false_on_ts_v<T>, "No run() supplied supplied.");
