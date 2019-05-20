@@ -1,8 +1,8 @@
-#include "../include/cutee/asserter.hpp"
+#include "../include/cutee/suite.hpp"
 
 namespace cutee
 {
 
-test_suite* asserter::_suite_ptr = nullptr;
+suite* asserter::_suite_ptr = nullptr;
 
 } /* namespace cutee */

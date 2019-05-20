@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-//#include "asserter.hpp"
 #include "test.hpp"
 #include "function.hpp"
 #include "performance_test.hpp"
