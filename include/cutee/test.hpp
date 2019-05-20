@@ -60,15 +60,16 @@ struct test
 template<class T>
 struct test_impl
    :  public test_interface
-   ,  public T
+   //,  public T
 {
    private:
+      T           _t;
       std::string _name;
 
    public:
       template<class... Ts>
       test_impl(const std::string& name, Ts&&... ts)
-         :  T(std::forward<Ts>(ts)...)
+         :  _t(std::forward<Ts>(ts)...)
          ,  _name(name)
       {
       }
@@ -77,11 +78,11 @@ struct test_impl
       {
          if constexpr(has_run_v<T, void()>)
          {
-            T::run();
+            _t.run();
          }
          else if constexpr(has_do_test_v<T, void()>)
          {
-            T::do_test();
+            _t.do_test();
          }
          else
          {
@@ -93,7 +94,7 @@ struct test_impl
       {
          if constexpr(has_setup_v<T, void()>)
          {
-            T::setup();
+            _t.setup();
          }
       }
       
@@ -101,7 +102,7 @@ struct test_impl
       {
          if constexpr(has_teardown_v<T, void()>)
          {
-            T::teardown();
+            _t.teardown();
          }
       }
       
@@ -110,7 +111,7 @@ struct test_impl
       {
          if constexpr(has_name_v<T, std::string()>)
          {
-            return _name + T::name();
+            return _name + _t.name();
          }
          else
          {
