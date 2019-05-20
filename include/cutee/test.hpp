@@ -47,6 +47,14 @@ CREATE_MEMBER_FUNCTION_CHECKER(name)
 
 struct test
 {
+   virtual ~test() {}
+   virtual void run()
+   {
+      this->do_test();
+   }
+   virtual void do_test()  {};
+   virtual void setup()    {};
+   virtual void teardown() {};
 };
 
 template<class T>
