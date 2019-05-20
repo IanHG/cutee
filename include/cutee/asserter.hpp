@@ -14,9 +14,9 @@ namespace cutee
  **/
 struct asserter
 {
-   static cutee::test_suite* _suite_ptr;
+   static cutee::suite* _suite_ptr;
 
-   static void __set_suite_ptr(cutee::test_suite* suite_ptr)
+   static void __set_suite_ptr(cutee::suite* suite_ptr)
    {
       _suite_ptr = suite_ptr;
    }
