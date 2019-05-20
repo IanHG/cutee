@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CUTEE_FLOAT_IS_EQUAL_H_INCLUDED
 #define CUTEE_FLOAT_IS_EQUAL_H_INCLUDED
 
@@ -6,8 +7,7 @@
 #include <type_traits> 
 // std::is_floating_point
 // std::conditional_t
-                        
-
+ 
 namespace cutee
 {
 
@@ -43,11 +43,14 @@ struct integer_type_
                  >;
 
    // assert that we have a type large enough
-   static_assert(!std::is_same<type2, void_type>::value, "Integer type is void :(, nothing large enough");
+   static_assert(!std::is_same<type2, void_type>::value, " Integer type is void :(, nothing large enough");
    //static_assert(std::is_floating_point<T>::value, "Type is not floating point"); // THINK ABOUT THIS ONE
 
    using type = type2;
 };
+
+template<class T>
+using integer_type_t = typename integer_type_<T>::type;
 
 } // namespace detail
 
@@ -203,6 +206,27 @@ bool float_eq(const std::complex<T>& a_lhs, const std::complex<T>& a_rhs, const 
 {
    return   float_eq(a_lhs.real(), a_rhs.real(), max_ulps_diff) 
          && float_eq(a_lhs.imag(), a_rhs.imag(), max_ulps_diff);
+}
+
+template
+   <  class T
+   ,  typename std::enable_if_t<std::is_floating_point_v<T> >* = nullptr
+   >
+bool float_eq
+   (  const std::vector<T>& a_lhs
+   ,  const std::vector<T>& a_rhs
+   ,  const integer_type<T> max_ulps_diff = 2
+   )
+{
+   bool equal = (a_lhs.size() == a_rhs.size());
+   if (equal)
+   {
+      for(decltype(a_lhs.size()) i = 0; i < a_lhs.size(); ++i)
+      {
+         equal = equal && float_eq(a_lhs[i], a_rhs[i], max_ulps_diff);
+      }
+   }
+   return equal;
 }
 
 /********************************/

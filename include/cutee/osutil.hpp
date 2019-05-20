@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CUTEE_OSUTIL_HPP_INCLUDED
 #define CUTEE_OSUTIL_HPP_INCLUDED
 
@@ -43,7 +44,7 @@ inline std::string demangle(const char* name)
 }
 } /* namespace detail */
 } /* namespace cutee */
-#endif
+#endif /* CUTEE_OSTREAM_UTILITY_TYPE && __GNUG__ */
 
 namespace cutee
 {
@@ -87,6 +88,10 @@ struct has_##NAME<C, Ret(Args...)> \
    public: \
       static constexpr bool value = type::value; \
 }; \
+\
+template<class C, class F>\
+constexpr bool has_##NAME##_v = has_##NAME<C, F>::value;\
+\
 PRAGMA_POP
 
 CREATE_MEMBER_FUNCTION_CHECKER(begin)
@@ -113,13 +118,23 @@ struct exists_operator_output_utilp
 };
 PRAGMA_POP
 
-#undef PRAGMA_PUSH
-#undef PRAGMA_POP
+//#undef PRAGMA_PUSH
+//#undef PRAGMA_POP
+
+/**
+ * Get demangled type as string
+ **/
+template<class T>
+std::string type_of()
+{
+   return demangle(typeid(T).name());
+}
 
 } /* namespace detail */ 
 
 } /* namespace cutee */
 
+#ifdef CUTEE_OSTREAM_UTILITY
 /**
  * Awesome output operator for iterable type.
  **/
@@ -135,11 +150,7 @@ template
    >
 std::ostream& operator<<(std::ostream& os, const ITERABLE& cont)
 {
-#if defined(CUTEE_OSTREAM_UTILITY_TYPE)
-   os << cutee::detail::demangle(typeid(cont).name()) << " (";
-#else
    os << "(";
-#endif /* CUTEE_OSTREAM_UTILITY_TYPE */
    for(auto it = cont.begin(), end = cont.end(); it != end; )
    {
       os << *it;
@@ -151,5 +162,6 @@ std::ostream& operator<<(std::ostream& os, const ITERABLE& cont)
    os << ")";
    return os;
 }
+#endif /* CUTEE_OSTREAM_UTILITY */
 
 #endif /* CUTEE_OSUTIL_HPP_INCLUDED */

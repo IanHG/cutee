@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.9)
 
 # Describe project
 project(cutee VERSION 1.0.0 DESCRIPTION "Minimal Unit Testing library.")
-set (CMAKE_CXX_STANDARD 14)
+set (CMAKE_CXX_STANDARD 17)
 
 ################################################################################
 #
@@ -31,17 +31,24 @@ set_target_properties(cutee PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(cutee PROPERTIES SOVERSION 1)
 set_target_properties(cutee PROPERTIES PUBLIC_HEADER 
 "\
-include/cutee/osutil.hpp;\
-include/cutee/failed_data.hpp;\
-include/cutee/float_eq.hpp;\
-include/cutee/performance_test.hpp;\
+include/cutee/asserter.hpp;\
+include/cutee/assertion.hpp;\
 include/cutee/collection.hpp;\
-include/cutee/test_failed.hpp;\
-include/cutee/test_suite.hpp;\
+include/cutee/container.hpp;\
+include/cutee/exceptions.hpp;\
+include/cutee/float_eq.hpp;\
+include/cutee/formater.hpp;\
+include/cutee/function.hpp;\
+include/cutee/macros.hpp;\
+include/cutee/message.hpp;\
+include/cutee/meta.hpp;\
+include/cutee/osutil.hpp;\
+include/cutee/performance_test.hpp;\
+include/cutee/suite.hpp;\
+include/cutee/test.hpp;\
 include/cutee/timer.hpp;\
-include/cutee/unit_assert.hpp;\
-include/cutee/unit_test_factory.hpp;\
-include/cutee/unit_test.hpp\
+include/cutee/version.hpp;\
+include/cutee/writer.hpp;\
 ")
 
 # Add static library 
