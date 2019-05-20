@@ -21,7 +21,7 @@ struct test
       virtual ~test() = 0;
       
       // overloadable function for doing the actual test
-      virtual void run() = 0;
+      virtual void run() { };
       
       // overloadable function for optional setup test method
       virtual void setup() { }
@@ -42,6 +42,7 @@ inline test::~test()
 #define PRAGMA_POP
 
 CREATE_MEMBER_FUNCTION_CHECKER(run)
+CREATE_MEMBER_FUNCTION_CHECKER(do_test)
 CREATE_MEMBER_FUNCTION_CHECKER(setup)
 CREATE_MEMBER_FUNCTION_CHECKER(teardown)
 CREATE_MEMBER_FUNCTION_CHECKER(name)
@@ -71,6 +72,10 @@ struct test_impl
          if constexpr(has_run_v<T, void()>)
          {
             T::run();
+         }
+         if constexpr(has_do_test_v<T, void()>)
+         {
+            T::do_test();
          }
          else
          {
