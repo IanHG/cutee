@@ -1,4 +1,4 @@
-#include "include/cutee/unit_test.hpp"
+#include "include/cutee/test.hpp"
 
 namespace cutee
 {
