@@ -12,7 +12,7 @@ namespace cutee
 
 template<size_t repeats, typename T>
 class performance_test
-   :  public  virtual test
+   :  public  virtual test_interface
    ,  private virtual T       /* using inheritance for EBCO (empty base class optimization) */
 {
    private:

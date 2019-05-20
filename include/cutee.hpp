@@ -6,6 +6,7 @@
 #endif /* CUTEE_OSTREAM_UTILITY */
 
 // Utility
+#include "cutee/version.hpp"
 #include "cutee/exceptions.hpp"
 #include "cutee/timer.hpp"
 #include "cutee/float_eq.hpp"

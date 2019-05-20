@@ -79,7 +79,7 @@ class suite
       friend class asserter;
       friend class collection;
 
-      void run_test(test&);
+      void run_test(test_interface&);
 
    public:
       suite
@@ -183,7 +183,7 @@ std::string suite::create_footer_message() const
 /**
  *
  **/
-void suite::run_test(test& t)
+void suite::run_test(test_interface& t)
 {
    // Setup
    t.setup();

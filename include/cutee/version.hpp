@@ -9,7 +9,7 @@
 #define CUTEE_VERSION CUTEE_VERSION_MAJOR.CUTEE_VERSION_MINOR.CUTEE_VERSION_PATCH
 
 #define XSTRINGIFY(a) STRINGIFY(a)
-#define STRINGIFY (a) #a
+#define STRINGIFY(a) #a
 
 namespace cutee
 {

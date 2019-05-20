@@ -12,29 +12,27 @@
 namespace cutee
 {
 
-struct test;
-
-struct test
+struct test_interface
 {
    public:
       //
-      virtual ~test() = 0;
+      virtual ~test_interface() = 0;
       
       // overloadable function for doing the actual test
-      virtual void run() { };
+      virtual void run() = 0;
       
       // overloadable function for optional setup test method
-      virtual void setup() { }
+      virtual void setup() = 0;
       
       // overloadable function for optional teardown test method
-      virtual void teardown() { }
+      virtual void teardown() = 0;
       
       // interface function for getting name of test
       virtual std::string name() const = 0;
 };
 
 //
-inline test::~test()
+inline test_interface::~test_interface()
 {
 }
 
@@ -47,13 +45,13 @@ CREATE_MEMBER_FUNCTION_CHECKER(setup)
 CREATE_MEMBER_FUNCTION_CHECKER(teardown)
 CREATE_MEMBER_FUNCTION_CHECKER(name)
 
-struct empty
+struct test
 {
 };
 
 template<class T>
 struct test_impl
-   :  public std::conditional_t<std::is_base_of_v<test, T>, empty, test>
+   :  public test_interface
    ,  public T
 {
    private:
@@ -73,13 +71,13 @@ struct test_impl
          {
             T::run();
          }
-         if constexpr(has_do_test_v<T, void()>)
-         {
-            T::do_test();
-         }
+         //else if constexpr(has_do_test_v<T, void()>)
+         //{
+         //   T::do_test();
+         //}
          else
          {
-            static_assert(false_on_ts_v<T>, "No run function supplied.");
+            static_assert(false_on_ts_v<T>, "No run() supplied supplied.");
          }
       }
       
@@ -113,7 +111,7 @@ struct test_impl
       }
 };
 
-using test_ptr_t = std::unique_ptr<test>;
+using test_ptr_t = std::unique_ptr<test_interface>;
 
 //
 template
