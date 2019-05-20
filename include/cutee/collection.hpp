@@ -42,6 +42,9 @@ class collection
       }
 };
 
+// for backwards compatibility
+using test_case = collection;
+
 } /* namespace cutee */
 
 #endif /* CUTEE_COLLECTION_HPP_INCLUDED */
