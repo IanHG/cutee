@@ -31,8 +31,8 @@ set_target_properties(cutee PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(cutee PROPERTIES SOVERSION 1)
 set_target_properties(cutee PROPERTIES PUBLIC_HEADER 
 "\
-include/cutee/asserter.hpp\
-include/cutee/assertion.hpp\
+include/cutee/asserter.hpp;\
+include/cutee/assertion.hpp;\
 include/cutee/collection.hpp;\
 include/cutee/container.hpp;\
 include/cutee/exceptions.hpp;\
