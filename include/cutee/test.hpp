@@ -100,7 +100,7 @@ struct test_impl
       }
       
       // interface function for getting name of test
-      std::string name() const override
+      virtual std::string name() const override
       {
          if constexpr(has_name_v<T, std::string()>)
          {
