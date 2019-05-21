@@ -59,7 +59,7 @@ class container
       template<class... Args>
       void add_function(Args&&... args)
       {
-         this->add_test<__function_wrap<Args...> >(std::forward<Args>(args)...);
+         this->add_test<function_wrap<Args...> >(std::forward<Args>(args)...);
       }
       
       ////

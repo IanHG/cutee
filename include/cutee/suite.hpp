@@ -128,7 +128,7 @@ namespace cutee
 /**
  *
  **/
-std::string suite::create_header_message() const
+inline std::string suite::create_header_message() const
 {
    std::stringstream sstr;
    // output header
@@ -150,7 +150,7 @@ std::string suite::create_header_message() const
 /**
  *
  **/
-std::string suite::create_statistics_message() const
+inline std::string suite::create_statistics_message() const
 {
    std::stringstream sstr;
    sstr << "----------------------------------------------------------------------\n"
@@ -168,7 +168,7 @@ std::string suite::create_statistics_message() const
 /**
  *
  **/
-std::string suite::create_footer_message() const
+inline std::string suite::create_footer_message() const
 {
    std::stringstream sstr;
    sstr << "----------------------------------------------------------------------\n"
@@ -183,7 +183,7 @@ std::string suite::create_footer_message() const
 /**
  *
  **/
-void suite::run_test(test_interface& t)
+inline void suite::run_test(test_interface& t)
 {
    // Setup
    t.setup();
@@ -223,7 +223,7 @@ void suite::run_test(test_interface& t)
 /**
  *
  **/
-void suite::do_tests
+inline void suite::do_tests
    (  std::ostream&        os
    ,  const cutee::format& form
    )
@@ -232,7 +232,7 @@ void suite::do_tests
    this->do_tests(*w);
 }
 
-void suite::do_tests
+inline void suite::do_tests
    (  const writer& w
    )
 {

@@ -21,7 +21,7 @@ struct failed
    virtual const char* what() const noexcept = 0;
 };
 
-failed::~failed() { }
+inline failed::~failed() { }
 
 /**
  * Failed assertion exception
