@@ -22,13 +22,13 @@ struct test_interface
       virtual void run() = 0;
       
       // overloadable function for optional setup test method
-      virtual void setup() = 0;
+      virtual void setup() {}
       
       // overloadable function for optional teardown test method
-      virtual void teardown() = 0;
+      virtual void teardown() {}
       
       // interface function for getting name of test
-      virtual std::string name() const = 0;
+      virtual std::string name() const { return std::string{""}; }
 };
 
 //
@@ -45,31 +45,22 @@ CREATE_MEMBER_FUNCTION_CHECKER(setup)
 CREATE_MEMBER_FUNCTION_CHECKER(teardown)
 CREATE_MEMBER_FUNCTION_CHECKER(name)
 
-struct test
+struct empty
 {
-   virtual ~test() {}
-   virtual void run()
-   {
-      this->do_test();
-   }
-   virtual void do_test()  {};
-   virtual void setup()    {};
-   virtual void teardown() {};
 };
 
 template<class T>
 struct test_impl
-   :  public test_interface
-   //,  public T
+   :  public std::conditional_t<std::is_base_of_v<test_interface, T>, empty, test_interface>
+   ,  public T
 {
    private:
-      T           _t;
       std::string _name;
 
    public:
       template<class... Ts>
       test_impl(const std::string& name, Ts&&... ts)
-         :  _t(std::forward<Ts>(ts)...)
+         :  T(std::forward<Ts>(ts)...)
          ,  _name(name)
       {
       }
@@ -78,11 +69,11 @@ struct test_impl
       {
          if constexpr(has_run_v<T, void()>)
          {
-            _t.run();
+            T::run();
          }
          else if constexpr(has_do_test_v<T, void()>)
          {
-            _t.do_test();
+            T::do_test();
          }
          else
          {
@@ -94,7 +85,7 @@ struct test_impl
       {
          if constexpr(has_setup_v<T, void()>)
          {
-            _t.setup();
+            T::setup();
          }
       }
       
@@ -102,7 +93,7 @@ struct test_impl
       {
          if constexpr(has_teardown_v<T, void()>)
          {
-            _t.teardown();
+            T::teardown();
          }
       }
       
@@ -111,7 +102,7 @@ struct test_impl
       {
          if constexpr(has_name_v<T, std::string()>)
          {
-            return _name + _t.name();
+            return _name + T::name();
          }
          else
          {
@@ -133,7 +124,8 @@ test_ptr_t test_create(const std::string a_name, Args&&... args)
 }
 
 // Backwards compatibility
-using unit_test = test;
+using test      = test_interface;
+using unit_test = test_interface;
 
 class default_test_name
 {

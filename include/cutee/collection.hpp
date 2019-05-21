@@ -4,7 +4,6 @@
 
 #include <iostream>
 
-#include "test.hpp"
 #include "exceptions.hpp"
 
 #include "container.hpp"
@@ -15,7 +14,6 @@ namespace cutee
 
 class collection
    :  virtual protected container
-   ,  virtual public    test
 {
    public:
       collection()            = default;
@@ -31,7 +29,7 @@ class collection
       }
       
       // Get name of collection (concat all individual test names)
-      std::string name() const
+      std::string name() const 
       {
          std::stringstream sstr;
          for(decltype(test_size()) i=0; i<test_size(); ++i)
