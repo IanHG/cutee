@@ -32,7 +32,7 @@ struct assertion_failed
    std::string _what;
    
    template<class... Ts>
-   static std::string __construct_what
+   static std::string construct_what__
       (  const assertion<Ts...>& asrt
       )
    {
@@ -43,7 +43,7 @@ struct assertion_failed
    assertion_failed
       (  const assertion<Ts...>& asrt
       )
-      :  _what(__construct_what(asrt))
+      :  _what(construct_what__(asrt))
    {
    }
 
