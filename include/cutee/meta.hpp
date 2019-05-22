@@ -10,6 +10,9 @@ namespace cutee
 /**
  * Function checkers.
  **/
+#undef PRAGMA_PUSH
+#undef PRAGMA_POP
+
 #ifdef __clang__ 
 #define PRAGMA_PUSH \
 _Pragma("clang diagnostic push") \
@@ -63,6 +66,53 @@ struct false_on_ts
 
 template<class... Ts>
 constexpr auto false_on_ts_v = false_on_ts<Ts...>::value;
+
+/**
+ * Check if type is a std::complex
+ **/
+template<class T>
+struct is_complex
+   :  public std::false_type
+{
+};
+
+template<class T>
+struct is_complex<std::complex<T>>
+   :  public std::true_type
+{
+   static_assert(std::is_floating_point<T>::value, "T must be floating-point type.");
+};
+
+template<class T>
+constexpr auto is_complex_v = is_complex<T>::value;
+
+/**
+ * Check if type is a std::vector
+ **/
+template<class T>
+struct is_vector
+   :  public std::false_type
+{
+};
+
+template<class T, class U>
+struct is_vector<std::vector<T, U> >
+   :  public std::true_type
+{
+   static_assert(std::is_floating_point<T>::value, "T must be floating-point type.");
+};
+
+template<class T>
+constexpr auto is_vector_v = is_vector<T>::value;
+
+/**
+ * Type sink for defining void on template parameters
+ **/
+template<class... Ts>
+struct type_sink
+{
+   using type = void;
+};
 
 } /* namespace cutee */
 

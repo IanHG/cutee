@@ -9,6 +9,7 @@
 #include<complex>
 #include<iomanip>
 
+#include "meta.hpp"
 #include "osutil.hpp"
 #include "formater.hpp"
 #include "assertion.hpp"
@@ -19,16 +20,6 @@ namespace cutee
 
 namespace detail
 {
-#ifdef __clang__ 
-#define PRAGMA_PUSH \
-_Pragma("clang diagnostic push") \
-_Pragma("clang diagnostic ignored \"-Wundefined-inline\"") 
-#define PRAGMA_POP \
-_Pragma("clang diagnostic pop") 
-#else
-#define PRAGMA_PUSH
-#define PRAGMA_POP
-#endif 
 
 PRAGMA_PUSH
 template<class C>
@@ -48,48 +39,6 @@ struct exists_operator_output
       static constexpr bool value = type::value;
 };
 PRAGMA_POP
-
-#undef PRAGMA_PUSH
-#undef PRAGMA_POP
-
-
-template<class T>
-struct is_complex
-   :  public std::false_type
-{
-};
-
-template<class T>
-struct is_complex<std::complex<T>>
-   :  public std::true_type
-{
-   static_assert(std::is_floating_point<T>::value, "T must be floating-point type.");
-};
-
-template<class T>
-constexpr auto is_complex_v = is_complex<T>::value;
-
-template<class T>
-struct is_vector
-   :  public std::false_type
-{
-};
-
-template<class T, class U>
-struct is_vector<std::vector<T, U> >
-   :  public std::true_type
-{
-   static_assert(std::is_floating_point<T>::value, "T must be floating-point type.");
-};
-
-template<class T>
-constexpr auto is_vector_v = is_vector<T>::value;
-
-template<class... Ts>
-struct type_sink
-{
-   using type = void;
-};
 
 template
    <  class T
