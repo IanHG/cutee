@@ -7,8 +7,23 @@
 cmake_minimum_required(VERSION 3.9)
 
 # Describe project
-project(cutee VERSION 1.0.0 DESCRIPTION "Minimal Unit Testing library.")
+project(cutee VERSION 2.0.4 DESCRIPTION "Minimal Unit Testing library.")
 set (CMAKE_CXX_STANDARD 17)
+
+#-----------------------------------------------------------------------------
+# Enable ccache if not already enabled by symlink masquerading and if no other
+# CMake compiler launchers are already defined
+#-----------------------------------------------------------------------------
+find_program(CCACHE_EXECUTABLE ccache)
+mark_as_advanced(CCACHE_EXECUTABLE)
+if(CCACHE_EXECUTABLE)
+  foreach(LANG C CXX)
+    if(NOT DEFINED CMAKE_${LANG}_COMPILER_LAUNCHER AND NOT CMAKE_${LANG}_COMPILER MATCHES ".*/ccache$")
+      message(STATUS "Enabling ccache for ${LANG}")
+      set(CMAKE_${LANG}_COMPILER_LAUNCHER ${CCACHE_EXECUTABLE} CACHE STRING "")
+    endif()
+  endforeach()
+endif()
 
 ################################################################################
 #
