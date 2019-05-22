@@ -50,6 +50,13 @@ struct symbol_replacer
    map_t       _map;
    bool        _remove_whitespace{true};
    std::regex  _regex            {"\\[/(.*?)\\]"};
+   
+   symbol_replacer(map_t&& map)
+      :  _map(std::move(map))
+   {
+   }
+
+   virtual ~symbol_replacer() = default;
 
    std::string& replace_in_string(std::string& str) const
    {
@@ -115,6 +122,8 @@ struct formater
    {
    }
 
+   virtual ~formater() = default;
+
    virtual const char* bold_on() const = 0;
    
    virtual const char* bold_off() const = 0;
@@ -136,6 +145,8 @@ template<class T>
 struct formater_middleware
    :  public formater
 {
+   virtual ~formater_middleware() = default;
+
    const T& self() const
    {
       return static_cast<const T&>(*this);

@@ -76,7 +76,7 @@ class suite
          }
       }
 
-      friend class asserter;
+      friend struct asserter;
       friend class collection;
 
       void run_test(test_interface&);

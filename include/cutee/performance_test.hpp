@@ -12,28 +12,29 @@ namespace cutee
 
 template<size_t repeats, typename T>
 class performance_test
-   :  public  virtual test_interface
-   ,  private virtual T       /* using inheritance for EBCO (empty base class optimization) */
+   :  private  T       /* using inheritance for EBCO (empty base class optimization) */
 {
    private:
       clock_timer m_timer;
 
       void benchmark_output(std::ostream& a_stream = std::cout) const
       {
-         a_stream << " TEST: " << name() << "\n"
-                  << " did "   << repeats << " runs and "
-                  << " used: " << m_timer.tot_clocks() << " clocks "
-                  << " (in "   << m_timer.tot_clocks_per_sec() << "s)."
-                  << std::endl;
+         //a_stream << " TEST: " << name() << "\n"
+         //         << " did "   << repeats << " runs and "
+         //         << " used: " << m_timer.tot_clocks() << " clocks "
+         //         << " (in "   << m_timer.tot_clocks_per_sec() << "s)."
+         //         << std::endl;
       }
 
    public:
-      template<typename... Args>
-      performance_test(const std::string a_name, const Args&... args): 
-         unit_test(), test(a_name,args...), m_timer()
-      { }
+      template<class... Ts>
+      performance_test(Ts&&... ts)
+         :  T(std::forward<Ts>(ts)...)
+         ,  m_timer()
+      { 
+      }
 
-      void run()
+      void run() override
       { 
          // Start timer 
          m_timer.start();

@@ -36,8 +36,12 @@ inline test_interface::~test_interface()
 {
 }
 
+#ifndef PRAGMA_PUSH
 #define PRAGMA_PUSH
+#endif /* PRAGMA_PUSH */
+#ifndef PRAGMA_POP
 #define PRAGMA_POP
+#endif /* PRAGMA_POP */
 
 CREATE_MEMBER_FUNCTION_CHECKER(run)
 CREATE_MEMBER_FUNCTION_CHECKER(do_test)
