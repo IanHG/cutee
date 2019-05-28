@@ -79,10 +79,9 @@ struct is_complex
 };
 
 template<class T>
-struct is_complex<std::complex<T>>
+struct is_complex<std::complex<T> >
    :  public std::true_type
 {
-   static_assert(std::is_floating_point<T>::value, "T must be floating-point type.");
 };
 
 template<class T>
@@ -101,7 +100,6 @@ template<class T, class U>
 struct is_vector<std::vector<T, U> >
    :  public std::true_type
 {
-   static_assert(std::is_floating_point<T>::value, "T must be floating-point type.");
 };
 
 template<class T>

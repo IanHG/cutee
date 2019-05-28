@@ -76,6 +76,8 @@ struct has_distance
          return numeric::float_ulps(lhs, lhs + rhs);
       }
    }
+   
+   static constexpr auto precision = std::numeric_limits<T>::max_digits10;
 };
 
 template
@@ -104,6 +106,8 @@ struct has_distance
          return std::complex<base_type>(numeric::float_ulps(lhs.real(), lhs.real() + rhs.real()), numeric::float_ulps(lhs.imag(), lhs.imag() + rhs.imag()));
       }
    }
+   
+   static constexpr auto precision = std::numeric_limits<typename std::decay_t<T>::value_type>::max_digits10;
 };
 
 template
@@ -139,6 +143,8 @@ struct has_distance
       }
       return ulps;
    }
+
+   static constexpr auto precision = std::numeric_limits<typename std::decay_t<T>::value_type>::max_digits10;
 };
 
 /**
@@ -151,7 +157,11 @@ template
 std::string value_string(const V& v)
 {
    std::stringstream s_str;
-   s_str << std::left << std::setprecision(16) << std::scientific << std::boolalpha;
+   s_str << std::left << std::scientific << std::boolalpha;
+   if constexpr(has_distance<V, V>::value)
+   {
+      s_str << std::setprecision(has_distance<V, V>::precision);
+   }
    s_str << v;
    return s_str.str();
 }
