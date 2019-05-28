@@ -3,6 +3,8 @@
 #define CUTEE_META_HPP_INCLUDED
 
 #include <type_traits>
+#include <complex>
+#include <vector>
 
 namespace cutee
 {

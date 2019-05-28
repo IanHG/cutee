@@ -151,7 +151,7 @@ template
 std::string value_string(const V& v)
 {
    std::stringstream s_str;
-   s_str << std::setprecision(10) << std::scientific << std::boolalpha;
+   s_str << std::left << std::setprecision(16) << std::scientific << std::boolalpha;
    s_str << v;
    return s_str.str();
 }
