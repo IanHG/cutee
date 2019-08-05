@@ -59,7 +59,10 @@ struct has_distance
    <  T
    ,  U
    ,  std::enable_if_t
-      <  std::is_same_v<std::decay_t<T>, std::decay_t<U> > 
+      <  std::is_same_v
+         <  std::decay_t<T>
+         ,  std::decay_t<U> 
+         > 
       && std::is_floating_point_v<std::decay_t<T> > 
       > 
    >
@@ -88,7 +91,10 @@ struct has_distance
    <  T
    ,  U
    ,  std::enable_if_t
-      <  std::is_same_v<std::decay_t<T>, std::decay_t<U> > 
+      <  std::is_same_v
+         <  std::decay_t<T>
+         ,  std::decay_t<U> 
+         > 
       && is_complex_v<std::decay_t<T> > 
       > 
    >
@@ -99,11 +105,17 @@ struct has_distance
       using base_type = decltype(numeric::float_ulps(lhs.real(), rhs.real()));
       if(type != assertion_type::comp_zero)
       {
-         return std::complex<base_type>(numeric::float_ulps(lhs.real(), rhs.real()), numeric::float_ulps(lhs.imag(), rhs.imag()));
+         return std::complex<base_type>
+            (  numeric::float_ulps(lhs.real(), rhs.real())
+            ,  numeric::float_ulps(lhs.imag(), rhs.imag())
+            );
       }
       else
       {
-         return std::complex<base_type>(numeric::float_ulps(lhs.real(), lhs.real() + rhs.real()), numeric::float_ulps(lhs.imag(), lhs.imag() + rhs.imag()));
+         return std::complex<base_type>
+            (  numeric::float_ulps(lhs.real(), lhs.real() + rhs.real())
+            ,  numeric::float_ulps(lhs.imag(), lhs.imag() + rhs.imag())
+            );
       }
    }
    
@@ -118,7 +130,10 @@ struct has_distance
    <  T
    ,  U
    ,  std::enable_if_t
-      <  std::is_same_v<std::decay_t<T>, std::decay_t<U> > 
+      <  std::is_same_v
+         <  std::decay_t<T>
+         ,  std::decay_t<U> 
+         > 
       && is_vector_v<std::decay_t<T> > 
       > 
    >
