@@ -242,7 +242,7 @@ inline bool suite::do_tests
    )
 {
    auto w = writer_ptr_t{new formated_writer{os, form}};
-   this->do_tests(*w);
+   return this->do_tests(*w);
 }
 
 inline bool suite::do_tests
