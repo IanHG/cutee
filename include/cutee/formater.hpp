@@ -49,7 +49,7 @@ struct symbol_replacer
 
    map_t       _map;
    bool        _remove_whitespace{true};
-   std::regex  _regex            {"\\[/(.*?)\\]"};
+   std::regex  _regex            {"\\[/(.*?)\\]"}; // match inside square brackets '[...]'
    
    symbol_replacer(map_t&& map)
       :  _map(std::move(map))

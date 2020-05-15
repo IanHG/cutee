@@ -29,6 +29,13 @@ class suite
       counter_type _num_tests      = static_cast<counter_type>(0);
       counter_type _num_assertions = static_cast<counter_type>(0); 
       counter_type _num_failed     = static_cast<counter_type>(0);
+
+      void reset()
+      {
+         this->_num_tests      = 0;
+         this->_num_assertions = 0;
+         this->_num_failed     = 0;
+      }
    };
 
    private:
@@ -59,7 +66,7 @@ class suite
 
          return sstr.str();
       }
-      
+
       /**
        * Execute assertion
        **/
@@ -82,6 +89,9 @@ class suite
       void run_test(test_interface&);
 
    public:
+      /**
+       * Constructor
+       **/
       suite
          (  const std::string& name = "default_suite"
          )
@@ -89,29 +99,32 @@ class suite
       { 
       }
       
+      /**
+       * Default destructor
+       **/
       ~suite() = default;
       
       /*!
        * Old interface for running the test suite.
        */
-      void do_tests(std::ostream& os = std::cout, const format& form = format::fancy);
+      bool do_tests(std::ostream& os = std::cout, const format& form = format::fancy);
 
       /*!
        *
        */
-      void do_tests(const writer&);
+      bool do_tests(const writer&);
 
       /*!
        * Interface for running the test suite.
        */
-      void run(std::ostream& os = std::cout, const format& form = format::fancy)
+      bool run(std::ostream& os = std::cout, const format& form = format::fancy)
       {
-         this->do_tests(os, form);
+         return this->do_tests(os, form);
       }
       
-      void run(const writer& w)
+      bool run(const writer& w)
       {
-         this->do_tests(w);
+         return this->do_tests(w);
       }
 };
 
@@ -223,7 +236,7 @@ inline void suite::run_test(test_interface& t)
 /**
  *
  **/
-inline void suite::do_tests
+inline bool suite::do_tests
    (  std::ostream&        os
    ,  const cutee::format& form
    )
@@ -232,11 +245,12 @@ inline void suite::do_tests
    this->do_tests(*w);
 }
 
-inline void suite::do_tests
+inline bool suite::do_tests
    (  const writer& w
    )
 {
    asserter::__set_suite_ptr(this);
+   this->_counter.reset();
    this->_first  = true;
    this->_writer = &w; //
    this->_writer->write(this->create_header_message());
@@ -260,6 +274,8 @@ inline void suite::do_tests
    // Clean-up
    asserter::__unset_suite_ptr();
    this->_writer = writer_ptr_t{nullptr};
+
+   return this->_counter._num_failed == 0;
 }
 
 } /* namespace cutee */
