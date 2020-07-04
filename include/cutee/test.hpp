@@ -26,6 +26,9 @@ struct test_interface
       
       // overloadable function for optional teardown test method
       virtual void teardown() {}
+
+      // overloadable function for custom message (used by performance test)
+      virtual std::string message() const { return std::string{""}; }
       
       // interface function for getting name of test
       virtual std::string name() const { return std::string{""}; }
@@ -48,6 +51,7 @@ CREATE_MEMBER_FUNCTION_CHECKER(do_test)
 CREATE_MEMBER_FUNCTION_CHECKER(setup)
 CREATE_MEMBER_FUNCTION_CHECKER(teardown)
 CREATE_MEMBER_FUNCTION_CHECKER(name)
+CREATE_MEMBER_FUNCTION_CHECKER(message)
 
 struct empty
 {
@@ -69,7 +73,9 @@ struct test_impl
       {
       }
 
-      void run() override
+      virtual ~test_impl() = default;
+
+      virtual void run() override
       {
          if constexpr(has_run_v<T, void()>)
          {
@@ -81,11 +87,11 @@ struct test_impl
          }
          else
          {
-            static_assert(false_on_ts_v<T>, "No run() supplied supplied.");
+            static_assert(false_on_ts_v<T>, "No run() function supplied.");
          }
       }
       
-      void setup() override
+      virtual void setup() override
       {
          if constexpr(has_setup_v<T, void()>)
          {
@@ -93,11 +99,24 @@ struct test_impl
          }
       }
       
-      void teardown() override
+      virtual void teardown() override
       {
          if constexpr(has_teardown_v<T, void()>)
          {
             T::teardown();
+         }
+      }
+
+      // 
+      virtual std::string message() const override
+      {
+         if constexpr(has_message_v<T, std::string()>)
+         {
+            return T::message();
+         }
+         else
+         {
+            return std::string{""};
          }
       }
       
@@ -122,7 +141,7 @@ template
    <  class T
    ,  typename... Args
    >
-test_ptr_t test_create(const std::string a_name, Args&&... args)
+test_ptr_t test_create(const std::string& a_name, Args&&... args)
 {
    return test_ptr_t{ new test_impl<T>(a_name, std::forward<Args>(args)...) };
 }

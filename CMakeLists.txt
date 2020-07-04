@@ -62,6 +62,7 @@ include/cutee/performance_test.hpp;\
 include/cutee/suite.hpp;\
 include/cutee/test.hpp;\
 include/cutee/timer.hpp;\
+include/cutee/typedef.hpp;\
 include/cutee/version.hpp;\
 include/cutee/writer.hpp;\
 ")

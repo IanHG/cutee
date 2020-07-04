@@ -1,8 +1,9 @@
+#include "../include/cutee/typedef.hpp"
 #include "../include/cutee/suite.hpp"
 
 namespace cutee
 {
 
-suite* asserter::_suite_ptr = nullptr;
+Cutee_thread_local suite* asserter::_suite_ptr = nullptr;
 
 } /* namespace cutee */

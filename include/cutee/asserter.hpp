@@ -2,6 +2,8 @@
 #ifndef CUTEE_ASSERTER_HPP_INCLUDED
 #define CUTEE_ASSERTER_HPP_INCLUDED
 
+#include "typedef.hpp"
+
 #include <tuple>
 #include <functional>
 #include <cassert>
@@ -14,7 +16,7 @@ namespace cutee
  **/
 struct asserter
 {
-   static cutee::suite* _suite_ptr;
+   static Cutee_thread_local cutee::suite* _suite_ptr;
 
    static void __set_suite_ptr(cutee::suite* suite_ptr)
    {

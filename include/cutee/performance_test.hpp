@@ -10,48 +10,72 @@
 namespace cutee
 {
 
-template<size_t repeats, typename T>
+template<typename T>
 class performance_test
-   :  private  T       /* using inheritance for EBCO (empty base class optimization) */
+   :  public test_impl<T>      /* using inheritance for EBCO (empty base class optimization) */
 {
+   using underlying_type = test_impl<T>;
+
    private:
       clock_timer m_timer;
-
-      void benchmark_output(std::ostream& a_stream = std::cout) const
-      {
-         //a_stream << " TEST: " << name() << "\n"
-         //         << " did "   << repeats << " runs and "
-         //         << " used: " << m_timer.tot_clocks() << " clocks "
-         //         << " (in "   << m_timer.tot_clocks_per_sec() << "s)."
-         //         << std::endl;
-      }
+      int         m_ntimes;
 
    public:
       template<class... Ts>
-      performance_test(Ts&&... ts)
-         :  T(std::forward<Ts>(ts)...)
+      performance_test(int ntimes, Ts&&... ts)
+         :  underlying_type(std::forward<Ts>(ts)...)
          ,  m_timer()
+         ,  m_ntimes(ntimes)
       { 
       }
 
-      void run() override
+      virtual void run() override
       { 
-         // Start timer 
-         m_timer.start();
-
          // Run test 
-         for(size_t i = 0; i < repeats; ++i) // loop over repeats
+         for(size_t i = 0; i < this->m_ntimes; ++i) // loop over repeats
          {
-            T::run(); // run the test
-         }
+            underlying_type::setup();
 
-         // Stop timer
-         m_timer.stop();
-         
-         // Print some benchmark
-         benchmark_output();
+            // Start timer 
+            m_timer.start();
+
+            underlying_type::run(); // run the test
+
+            // Start timer 
+            m_timer.stop();
+
+            underlying_type::teardown();
+         }
+      }
+
+      virtual std::string message() const override
+      {
+         std::stringstream sstr;
+
+         sstr << " TEST: " << this->name() << "\n"
+              << " did "   << m_ntimes << " runs and"
+              << " used: " << m_timer.tot_clocks() << " clocks "
+              << " (in "   << m_timer.tot_clocks_per_sec() << "s)."
+              << std::endl;
+
+         return sstr.str();
+      }
+
+      virtual std::string name() const override
+      {
+         return underlying_type::name() + " (performance)";
       }
 };
+
+//
+template
+   <  class T
+   ,  typename... Args
+   >
+test_ptr_t create_performance_test(int ntimes, const std::string& a_name, Args&&... args)
+{
+   return test_ptr_t{ new performance_test<T>(ntimes, a_name, std::forward<Args>(args)...) };
+}
 
 } /* namespace cutee */
 

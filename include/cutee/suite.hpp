@@ -49,6 +49,7 @@ class suite
       std::string create_header_message()       const;
       std::string create_statistics_message()   const;
       std::string create_footer_message()       const;
+      std::string create_test_message(const std::string& msg) const;
        
       std::string create_failed_message(const std::string& name, const std::string& msg)
       {
@@ -193,6 +194,15 @@ inline std::string suite::create_footer_message() const
    return sstr.str();
 }
 
+inline std::string suite::create_test_message(const std::string& msg) const
+{
+   std::stringstream sstr;
+   sstr  << "......................................................................\n"
+         << msg
+         << "......................................................................\n";
+   return sstr.str();
+}
+
 /**
  *
  **/
@@ -205,6 +215,14 @@ inline void suite::run_test(test_interface& t)
    try
    {
       t.run();
+
+      std::string message = t.message();
+
+      if(!message.empty())
+      {
+         message = this->create_test_message(message);
+         this->_writer->write(message);
+      }
    }
    catch(const exception::failed& e)
    {

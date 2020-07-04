@@ -53,7 +53,7 @@ using function_return_t = typename function_return<Ts...>::type;
 //
 void unit_assert_fcn(bool, const std::string&, const char*, int);
 
-template<class S, class F, class... Args>
+template<class F, class... Args>
 struct function_wrap
 {
    private:

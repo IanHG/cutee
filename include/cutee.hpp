@@ -6,6 +6,7 @@
 #endif /* CUTEE_OSTREAM_UTILITY */
 
 // Utility
+#include "cutee/typedef.hpp"
 #include "cutee/version.hpp"
 #include "cutee/exceptions.hpp"
 #include "cutee/timer.hpp"
@@ -18,7 +19,6 @@
 #include "cutee/container.hpp"
 #include "cutee/collection.hpp"
 #include "cutee/suite.hpp"
-
 #include "cutee/performance_test.hpp"
 
 #endif /* CUTEE_HPP_INCLUDED */

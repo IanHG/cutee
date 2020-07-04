@@ -1,6 +1,6 @@
 #pragma once
-#ifndef LIBMDA_TESTING_TIMER_H
-#define LIBMDA_TESTING_TIMER_H
+#ifndef CUTEE_TIMER_HPP
+#define CUTEE_TIMER_HPP
 
 #include <ctime>
 
@@ -104,4 +104,4 @@ class clock_timer
 
 } /* namespace cutee */
 
-#endif /* CUTEE_TIMER_H */
+#endif /* CUTEE_TIMER_HPP */
